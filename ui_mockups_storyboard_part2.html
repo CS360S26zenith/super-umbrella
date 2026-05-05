@@ -1,0 +1,341 @@
+
+<style>
+  body { margin: 0; }
+  .screen-wrap { display: flex; flex-direction: column; gap: 2rem; padding: 1rem 0; }
+  .screen-label { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 6px; letter-spacing: .03em; }
+  .req-tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 99px; background: var(--color-background-info); color: var(--color-text-info); margin: 0 2px; }
+  .screen { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 12px; overflow: hidden; font-size: 12px; color: var(--color-text-primary); }
+  .nav { background: var(--color-background-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-brand { font-weight: 500; font-size: 13px; }
+  .nav-links { display: flex; gap: 14px; font-size: 11px; color: var(--color-text-secondary); }
+  .nav-links span { cursor: default; }
+  .nav-user { font-size: 11px; color: var(--color-text-secondary); display: flex; align-items:center; gap:6px; }
+  .avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--color-background-info); display: flex; align-items:center; justify-content: center; font-size: 9px; font-weight: 500; color: var(--color-text-info); }
+  .body-pad { padding: 14px; }
+  .search-bar { border: 0.5px solid var(--color-border-secondary); border-radius: 8px; padding: 7px 10px; font-size: 12px; color: var(--color-text-secondary); display: flex; align-items:center; gap: 8px; margin-bottom: 12px; }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chip { border: 0.5px solid var(--color-border-secondary); border-radius: 99px; padding: 3px 10px; font-size: 11px; cursor: default; }
+  .chip.active { background: var(--color-background-info); color: var(--color-text-info); border-color: transparent; }
+  .event-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ecard { border: 0.5px solid var(--color-border-tertiary); border-radius: 8px; overflow: hidden; }
+  .ecard-img { height: 40px; background: var(--color-background-secondary); display:flex; align-items:center; justify-content: center; font-size: 10px; color: var(--color-text-tertiary); }
+  .ecard-body { padding: 8px; }
+  .ecard-title { font-weight: 500; font-size: 11px; margin-bottom: 3px; }
+  .ecard-meta { font-size: 10px; color: var(--color-text-secondary); }
+  .cap-bar-wrap { margin-top: 5px; }
+  .cap-bar { height: 3px; background: var(--color-border-tertiary); border-radius: 99px; }
+  .cap-fill { height: 3px; background: var(--color-text-success); border-radius: 99px; }
+  .cap-fill.warn { background: var(--color-text-warning); }
+  .arrow-row { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; color: var(--color-text-secondary); padding: 6px 0; }
+  .arrow-row svg { flex-shrink:0; }
+  /* Detail screen */
+  .detail-header { background: var(--color-background-secondary); padding: 12px 14px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .detail-cat { font-size: 10px; color: var(--color-text-info); font-weight:500; }
+  .detail-title { font-size: 15px; font-weight: 500; margin: 4px 0; }
+  .detail-meta { font-size: 11px; color: var(--color-text-secondary); }
+  .info-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; font-size: 11px; }
+  .info-icon { width: 14px; text-align: center; color: var(--color-text-secondary); flex-shrink:0; }
+  .rsvp-btn { background: var(--color-background-info); color: var(--color-text-info); border: 0.5px solid var(--color-border-info); border-radius: 8px; padding: 7px 0; text-align: center; font-size: 12px; font-weight: 500; margin-top: 10px; }
+  .cap-info { font-size: 10px; color: var(--color-text-secondary); margin-top: 6px; text-align: center; }
+  /* Organizer dashboard */
+  .dash-stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .stat-card { background: var(--color-background-secondary); border-radius: 8px; padding: 8px 10px; }
+  .stat-val { font-size: 18px; font-weight: 500; }
+  .stat-lbl { font-size: 10px; color: var(--color-text-secondary); margin-top: 2px; }
+  .event-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .event-row:last-child { border-bottom: none; }
+  .er-title { font-size: 11px; font-weight: 500; }
+  .er-meta { font-size: 10px; color: var(--color-text-secondary); }
+  .er-badge { font-size: 10px; padding: 2px 8px; border-radius: 99px; }
+  .er-badge.active { background: var(--color-background-success); color: var(--color-text-success); }
+  .er-badge.draft { background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); }
+  /* Create event */
+  .form-field { margin-bottom: 10px; }
+  .field-label { font-size: 10px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 3px; }
+  .field-input { border: 0.5px solid var(--color-border-secondary); border-radius: 6px; padding: 6px 8px; font-size: 11px; color: var(--color-text-primary); width: 100%; box-sizing: border-box; background: var(--color-background-primary); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .submit-btn { background: var(--color-background-info); color: var(--color-text-info); border: none; border-radius: 8px; padding: 8px 0; text-align:center; font-size: 12px; font-weight: 500; width: 100%; margin-top: 4px; }
+  /* Notification panel */
+  .notif { padding: 10px 0; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; gap: 10px; align-items: flex-start; }
+  .notif:last-child { border-bottom: none; }
+  .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-background-info); margin-top: 3px; flex-shrink:0; }
+  .notif-text { font-size: 11px; }
+  .notif-time { font-size: 10px; color: var(--color-text-secondary); margin-top: 2px; }
+  /* Storyboard connector */
+  .sb-connector { display: flex; flex-direction: column; align-items: center; padding: 4px 0; gap: 2px; }
+  .sb-action { font-size: 10px; color: var(--color-text-info); font-weight: 500; }
+  .section-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 1rem 0 4px; }
+  .annot { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 8px; }
+</style>
+
+<div class="screen-wrap">
+
+  <!-- === SCREEN 1: HOME / BROWSE === -->
+  <div>
+    <div class="screen-label">Screen 1 — Event browse &amp; discovery
+      <span class="req-tag">US-01</span><span class="req-tag">US-02</span><span class="req-tag">US-03</span><span class="req-tag">US-04</span><span class="req-tag">US-08</span>
+    </div>
+    <div class="screen">
+      <div class="nav">
+        <span class="nav-brand">LUMS Events</span>
+        <div class="nav-links">
+          <span>Browse</span><span>My Events</span><span>Calendar</span>
+        </div>
+        <div class="nav-user">
+          <div class="avatar">AK</div>
+          Ali K.
+        </div>
+      </div>
+      <div class="body-pad">
+        <div class="search-bar">
+          <span style="font-size:11px;color:var(--color-text-tertiary)">🔍</span>
+          <span style="color:var(--color-text-tertiary)">Search events…</span>
+          <span style="margin-left:auto;font-size:10px;color:var(--color-text-tertiary)">Date ▾</span>
+        </div>
+        <div class="filter-row">
+          <span class="chip active">All</span>
+          <span class="chip">Talks</span>
+          <span class="chip">Sports</span>
+          <span class="chip">Clubs</span>
+          <span class="chip">Performances</span>
+        </div>
+        <div class="event-grid">
+          <div class="ecard">
+            <div class="ecard-img">📸 poster</div>
+            <div class="ecard-body">
+              <div class="ecard-title">AI Research Symposium</div>
+              <div class="ecard-meta">Apr 22 · SSE Auditorium</div>
+              <div class="cap-bar-wrap">
+                <div class="cap-bar"><div class="cap-fill warn" style="width:80%"></div></div>
+                <div class="ecard-meta" style="margin-top:2px">24 / 30 spots</div>
+              </div>
+            </div>
+          </div>
+          <div class="ecard">
+            <div class="ecard-img">📸 poster</div>
+            <div class="ecard-body">
+              <div class="ecard-title">Cricket Trials</div>
+              <div class="ecard-meta">Apr 25 · Sports Complex</div>
+              <div class="cap-bar-wrap">
+                <div class="cap-bar"><div class="cap-fill" style="width:40%"></div></div>
+                <div class="ecard-meta" style="margin-top:2px">12 / 30 spots</div>
+              </div>
+            </div>
+          </div>
+          <div class="ecard">
+            <div class="ecard-img">📸 poster</div>
+            <div class="ecard-body">
+              <div class="ecard-title">Drama Society Audition</div>
+              <div class="ecard-meta">Apr 28 · FC Room 4</div>
+              <div class="cap-bar-wrap">
+                <div class="cap-bar"><div class="cap-fill" style="width:60%"></div></div>
+                <div class="ecard-meta" style="margin-top:2px">18 / 30 spots</div>
+              </div>
+            </div>
+          </div>
+          <div class="ecard">
+            <div class="ecard-img">📸 poster</div>
+            <div class="ecard-body">
+              <div class="ecard-title">Startup Pitch Night</div>
+              <div class="ecard-meta">May 1 · SDSB Hall</div>
+              <div class="cap-bar-wrap">
+                <div class="cap-bar"><div class="cap-fill" style="width:100%"></div></div>
+                <div class="ecard-meta" style="margin-top:2px; color: var(--color-text-danger)">Full — join waitlist</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="sb-connector">
+    <svg width="2" height="18" viewBox="0 0 2 18"><line x1="1" y1="0" x2="1" y2="18" stroke="var(--color-border-secondary)" stroke-width="1.5" stroke-dasharray="3 2"/></svg>
+    <span class="sb-action">User clicks an event card</span>
+    <svg width="10" height="8" viewBox="0 0 10 8"><path d="M5 8L0 0H10Z" fill="var(--color-text-info)"/></svg>
+  </div>
+
+  <!-- === SCREEN 2: EVENT DETAIL === -->
+  <div>
+    <div class="screen-label">Screen 2 — Event detail &amp; RSVP
+      <span class="req-tag">US-04</span><span class="req-tag">US-06</span><span class="req-tag">US-07</span><span class="req-tag">US-08</span><span class="req-tag">US-09</span>
+    </div>
+    <div class="screen">
+      <div class="nav">
+        <span style="font-size:11px;color:var(--color-text-secondary)">← Back</span>
+        <span class="nav-brand">Event Detail</span>
+        <div class="avatar">AK</div>
+      </div>
+      <div class="detail-header">
+        <div class="detail-cat">Talks · SSE Auditorium</div>
+        <div class="detail-title">AI Research Symposium</div>
+        <div class="detail-meta">Organized by LUMS CS Society</div>
+      </div>
+      <div class="body-pad">
+        <div class="info-row"><span class="info-icon">📅</span><span>Tuesday, April 22 · 2:00 PM – 5:00 PM</span></div>
+        <div class="info-row"><span class="info-icon">📍</span><span>SSE Auditorium, LUMS Campus</span></div>
+        <div class="info-row"><span class="info-icon">👥</span><span>24 registered · 6 spots remaining</span></div>
+        <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin:8px 0">
+          Join us for an afternoon of AI research presentations by LUMS faculty and students. Topics include NLP, computer vision, and ML fairness.
+        </div>
+        <div class="cap-bar"><div class="cap-fill warn" style="width:80%"></div></div>
+        <div class="cap-info">80% full</div>
+        <div class="rsvp-btn">RSVP — Reserve my spot</div>
+        <div style="text-align:center;font-size:10px;color:var(--color-text-secondary);margin-top:6px">Add to Google Calendar &nbsp;|&nbsp; Add to Outlook</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="sb-connector">
+    <svg width="2" height="18" viewBox="0 0 2 18"><line x1="1" y1="0" x2="1" y2="18" stroke="var(--color-border-secondary)" stroke-width="1.5" stroke-dasharray="3 2"/></svg>
+    <span class="sb-action">User clicks RSVP → confirmation modal → spots updated live</span>
+    <svg width="10" height="8" viewBox="0 0 10 8"><path d="M5 8L0 0H10Z" fill="var(--color-text-info)"/></svg>
+  </div>
+
+  <!-- === SCREEN 3: MY EVENTS / CALENDAR === -->
+  <div>
+    <div class="screen-label">Screen 3 — My events &amp; personal calendar
+      <span class="req-tag">US-10</span><span class="req-tag">US-11</span><span class="req-tag">US-12</span><span class="req-tag">US-13</span>
+    </div>
+    <div class="screen">
+      <div class="nav">
+        <span class="nav-brand">LUMS Events</span>
+        <div class="nav-links"><span>Browse</span><span style="color:var(--color-text-info);font-weight:500">My Events</span><span>Calendar</span></div>
+        <div class="avatar">AK</div>
+      </div>
+      <div class="body-pad">
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <span class="chip active">Upcoming</span>
+          <span class="chip">Past</span>
+          <span class="chip">Waitlisted</span>
+        </div>
+        <div class="event-row">
+          <div><div class="er-title">AI Research Symposium</div><div class="er-meta">Apr 22 · 2:00 PM</div></div>
+          <span class="er-badge active">RSVPed</span>
+        </div>
+        <div class="event-row">
+          <div><div class="er-title">Drama Society Audition</div><div class="er-meta">Apr 28 · 4:00 PM</div></div>
+          <span class="er-badge active">RSVPed</span>
+        </div>
+        <div class="event-row">
+          <div><div class="er-title">Startup Pitch Night</div><div class="er-meta">May 1 · 6:00 PM</div></div>
+          <span class="er-badge draft">Waitlisted #3</span>
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:0.5px solid var(--color-border-tertiary)">
+          <div style="font-size:11px;font-weight:500;margin-bottom:8px">Notifications</div>
+          <div class="notif">
+            <div class="notif-dot"></div>
+            <div><div class="notif-text">AI Research Symposium starts in 1 hour.</div><div class="notif-time">Today, 1:00 PM</div></div>
+          </div>
+          <div class="notif">
+            <div class="notif-dot" style="background:var(--color-background-warning)"></div>
+            <div><div class="notif-text">Startup Pitch Night is now full. You're #3 on the waitlist.</div><div class="notif-time">Yesterday, 9:42 AM</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="sb-connector">
+    <svg width="2" height="18" viewBox="0 0 2 18"><line x1="1" y1="0" x2="1" y2="18" stroke="var(--color-border-secondary)" stroke-width="1.5" stroke-dasharray="3 2"/></svg>
+    <span class="sb-action">Organizer logs in → sees organizer dashboard</span>
+    <svg width="10" height="8" viewBox="0 0 10 8"><path d="M5 8L0 0H10Z" fill="var(--color-text-info)"/></svg>
+  </div>
+
+  <!-- === SCREEN 4: ORGANIZER DASHBOARD === -->
+  <div>
+    <div class="screen-label">Screen 4 — Organizer dashboard
+      <span class="req-tag">US-14</span><span class="req-tag">US-15</span><span class="req-tag">US-16</span><span class="req-tag">US-17</span><span class="req-tag">US-18</span><span class="req-tag">US-20</span>
+    </div>
+    <div class="screen">
+      <div class="nav">
+        <span class="nav-brand">LUMS Events — Organizer</span>
+        <div class="nav-links"><span>My Events</span><span>Analytics</span></div>
+        <div class="avatar">CS</div>
+      </div>
+      <div class="body-pad">
+        <div class="dash-stat-row">
+          <div class="stat-card"><div class="stat-val">4</div><div class="stat-lbl">Active events</div></div>
+          <div class="stat-card"><div class="stat-val">86</div><div class="stat-lbl">Total RSVPs</div></div>
+          <div class="stat-card"><div class="stat-val">94%</div><div class="stat-lbl">Attendance rate</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:12px;font-weight:500">My events</span>
+          <span style="font-size:11px;color:var(--color-text-info);cursor:default">+ Create event</span>
+        </div>
+        <div class="event-row">
+          <div><div class="er-title">AI Research Symposium</div><div class="er-meta">Apr 22 · 24 / 30 RSVPs</div></div>
+          <span class="er-badge active">Live</span>
+        </div>
+        <div class="event-row">
+          <div><div class="er-title">Python Workshop</div><div class="er-meta">May 5 · 10 / 25 RSVPs</div></div>
+          <span class="er-badge active">Live</span>
+        </div>
+        <div class="event-row">
+          <div><div class="er-title">End-of-Year Gala</div><div class="er-meta">Jun 1 · capacity TBD</div></div>
+          <span class="er-badge draft">Draft</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="sb-connector">
+    <svg width="2" height="18" viewBox="0 0 2 18"><line x1="1" y1="0" x2="1" y2="18" stroke="var(--color-border-secondary)" stroke-width="1.5" stroke-dasharray="3 2"/></svg>
+    <span class="sb-action">Organizer clicks "+ Create event"</span>
+    <svg width="10" height="8" viewBox="0 0 10 8"><path d="M5 8L0 0H10Z" fill="var(--color-text-info)"/></svg>
+  </div>
+
+  <!-- === SCREEN 5: CREATE EVENT === -->
+  <div>
+    <div class="screen-label">Screen 5 — Create / edit event form
+      <span class="req-tag">US-14</span><span class="req-tag">US-15</span><span class="req-tag">US-20</span>
+    </div>
+    <div class="screen">
+      <div class="nav">
+        <span style="font-size:11px;color:var(--color-text-secondary)">← Cancel</span>
+        <span class="nav-brand">Create Event</span>
+        <span style="font-size:11px;color:var(--color-text-secondary)">Save draft</span>
+      </div>
+      <div class="body-pad">
+        <div class="form-field">
+          <div class="field-label">Event title *</div>
+          <div class="field-input" style="color:var(--color-text-tertiary)">e.g. Python Workshop</div>
+        </div>
+        <div class="field-row">
+          <div class="form-field">
+            <div class="field-label">Category *</div>
+            <div class="field-input" style="color:var(--color-text-tertiary)">Select ▾</div>
+          </div>
+          <div class="form-field">
+            <div class="field-label">Venue *</div>
+            <div class="field-input" style="color:var(--color-text-tertiary)">Select ▾</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="form-field">
+            <div class="field-label">Date *</div>
+            <div class="field-input" style="color:var(--color-text-tertiary)">DD / MM / YYYY</div>
+          </div>
+          <div class="form-field">
+            <div class="field-label">Time *</div>
+            <div class="field-input" style="color:var(--color-text-tertiary)">HH : MM</div>
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="field-label">Max capacity *</div>
+          <div class="field-input" style="color:var(--color-text-tertiary)">e.g. 50</div>
+        </div>
+        <div class="form-field">
+          <div class="field-label">Description</div>
+          <div class="field-input" style="height:44px;color:var(--color-text-tertiary)">Describe your event…</div>
+        </div>
+        <div class="submit-btn">Submit for approval</div>
+      </div>
+    </div>
+  </div>
+
+</div>

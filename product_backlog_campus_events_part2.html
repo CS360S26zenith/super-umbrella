@@ -1,0 +1,234 @@
+
+<style>
+  .backlog-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .backlog-table th { font-weight: 500; font-size: 12px; color: var(--color-text-secondary); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--color-border-tertiary); }
+  .backlog-table td { padding: 8px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); vertical-align: top; }
+  .backlog-table tr:hover td { background: var(--color-background-secondary); }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 500; }
+  .badge-low { background: var(--color-background-success); color: var(--color-text-success); }
+  .badge-medium { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .badge-high { background: var(--color-background-danger); color: var(--color-text-danger); }
+  .badge-release { background: var(--color-background-info); color: var(--color-text-info); }
+  .sp { font-weight: 500; color: var(--color-text-primary); }
+  .section-header td { background: var(--color-background-secondary); font-weight: 500; font-size: 12px; color: var(--color-text-secondary); padding: 6px 10px; }
+  h2 { font-size: 16px; font-weight: 500; margin: 1.5rem 0 0.5rem; color: var(--color-text-primary); }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 1rem; }
+</style>
+
+<h2>Product backlog — campus event discovery platform</h2>
+<div class="legend">
+  <span><span class="badge badge-release">checkpoint</span> Released at halfway</span>
+  <span>SP = story points (Fibonacci: 1,2,3,5,8,13)</span>
+</div>
+
+<table class="backlog-table">
+  <thead>
+    <tr>
+      <th style="width:44px">#</th>
+      <th>User story</th>
+      <th style="width:36px">SP</th>
+      <th style="width:68px">Risk</th>
+      <th style="width:80px">Release</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- STUDENT STORIES -->
+    <tr class="section-header"><td colspan="5">Student — event discovery &amp; browsing</td></tr>
+    <tr>
+      <td>US-01</td>
+      <td>As a student, I want to browse all upcoming campus events so that I can find things to attend.</td>
+      <td class="sp">3</td>
+      <td><span class="badge badge-low">Low</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-02</td>
+      <td>As a student, I want to filter events by category (talks, sports, clubs, performances) so that I only see relevant events.</td>
+      <td class="sp">3</td>
+      <td><span class="badge badge-low">Low</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-03</td>
+      <td>As a student, I want to search events by keyword, date, or location so that I can quickly find specific events.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-04</td>
+      <td>As a student, I want to view a detailed event page (description, time, venue, capacity) so that I have all the information I need before RSVPing.</td>
+      <td class="sp">2</td>
+      <td><span class="badge badge-low">Low</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-05</td>
+      <td>As a student, I want to see personalized event recommendations based on my interests and past RSVPs so that I discover events I would otherwise miss.</td>
+      <td class="sp">13</td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>Final</td>
+    </tr>
+
+    <!-- RSVP & ATTENDANCE -->
+    <tr class="section-header"><td colspan="5">Student — RSVP &amp; attendance</td></tr>
+    <tr>
+      <td>US-06</td>
+      <td>As a student, I want to RSVP to an event so that my spot is reserved and the organizer knows I'm attending.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-07</td>
+      <td>As a student, I want to cancel my RSVP so that my spot can be freed for other students.</td>
+      <td class="sp">2</td>
+      <td><span class="badge badge-low">Low</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-08</td>
+      <td>As a student, I want to see the current number of available spots for an event so that I know if space is running out.</td>
+      <td class="sp">3</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-09</td>
+      <td>As a student, I want to join a waitlist when an event is full so that I'm notified if a spot opens up.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>Final</td>
+    </tr>
+
+    <!-- CALENDAR -->
+    <tr class="section-header"><td colspan="5">Student — calendar integration</td></tr>
+    <tr>
+      <td>US-10</td>
+      <td>As a student, I want to add an RSVPed event to my personal calendar (Google/Outlook) so that it appears in my existing schedule.</td>
+      <td class="sp">8</td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>Final</td>
+    </tr>
+    <tr>
+      <td>US-11</td>
+      <td>As a student, I want to view a calendar view of all events I've RSVPed to so that I can manage my schedule within the platform.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>Final</td>
+    </tr>
+
+    <!-- NOTIFICATIONS -->
+    <tr class="section-header"><td colspan="5">Student — notifications</td></tr>
+    <tr>
+      <td>US-12</td>
+      <td>As a student, I want to receive a notification when an event I've RSVPed to is updated or cancelled so that I'm always informed.</td>
+      <td class="sp">8</td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>Final</td>
+    </tr>
+    <tr>
+      <td>US-13</td>
+      <td>As a student, I want to receive a reminder notification before an event I've RSVPed to so that I don't forget to attend.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>Final</td>
+    </tr>
+
+    <!-- ORGANIZER STORIES -->
+    <tr class="section-header"><td colspan="5">Club leader / organizer — event management</td></tr>
+    <tr>
+      <td>US-14</td>
+      <td>As a club leader, I want to create a new event with title, description, date, time, venue, category, and capacity so that students can discover and attend it.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-15</td>
+      <td>As a club leader, I want to edit an existing event's details so that I can correct mistakes or update information.</td>
+      <td class="sp">3</td>
+      <td><span class="badge badge-low">Low</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-16</td>
+      <td>As a club leader, I want to cancel an event so that registered attendees are notified automatically.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>Final</td>
+    </tr>
+    <tr>
+      <td>US-17</td>
+      <td>As a club leader, I want to view a dashboard of my events with RSVP counts and attendance stats so that I can track engagement.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-18</td>
+      <td>As a club leader, I want to export the attendee list for an event so that I can use it for check-in or records.</td>
+      <td class="sp">3</td>
+      <td><span class="badge badge-low">Low</span></td>
+      <td>Final</td>
+    </tr>
+    <tr>
+      <td>US-19</td>
+      <td>As a club leader, I want to send a broadcast message to all RSVPed attendees so that I can communicate important updates.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>Final</td>
+    </tr>
+
+    <!-- TICKET MANAGEMENT -->
+    <tr class="section-header"><td colspan="5">Club leader — ticket &amp; capacity management</td></tr>
+    <tr>
+      <td>US-20</td>
+      <td>As a club leader, I want to set a maximum capacity for my event so that attendance does not exceed the venue limit.</td>
+      <td class="sp">3</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-21</td>
+      <td>As a club leader, I want to generate QR-code tickets for attendees so that check-in at the door is fast and accurate.</td>
+      <td class="sp">8</td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>Final</td>
+    </tr>
+
+    <!-- AUTH & STAFF -->
+    <tr class="section-header"><td colspan="5">LUMS staff — administration</td></tr>
+    <tr>
+      <td>US-22</td>
+      <td>As LUMS staff, I want to approve or reject event submissions before they go live so that only appropriate events are listed.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>Final</td>
+    </tr>
+    <tr>
+      <td>US-23</td>
+      <td>As LUMS staff, I want to view platform-wide analytics (total events, RSVPs, popular categories) so that I can monitor campus activity.</td>
+      <td class="sp">8</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>Final</td>
+    </tr>
+
+    <!-- AUTH -->
+    <tr class="section-header"><td colspan="5">All users — authentication</td></tr>
+    <tr>
+      <td>US-24</td>
+      <td>As any user, I want to log in with my LUMS credentials (SSO) so that I don't need a separate account.</td>
+      <td class="sp">8</td>
+      <td><span class="badge badge-high">High</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+    <tr>
+      <td>US-25</td>
+      <td>As any user, I want my role (student / organizer / staff) to be recognized automatically after login so that I see the right interface.</td>
+      <td class="sp">5</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td><span class="badge badge-release">checkpoint</span></td>
+    </tr>
+  </tbody>
+</table>
