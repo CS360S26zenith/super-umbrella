@@ -1,0 +1,222 @@
+@startuml Campus Event Discovery Platform - Class Diagram
+
+' Model Classes
+package "Model" {
+    class Event {
+        - String eventId
+        - String title
+        - String description
+        - Timestamp date
+        - String venue
+        - String category
+        - int capacity
+        - int rsvpCount
+        - String organizerId
+        - String status
+        + Event()
+        + Event(eventId, title, description, ...)
+        + boolean isFull()
+        + int getSpotsRemaining()
+        + int getFillPercentage()
+        + getters and setters
+    }
+
+    class User {
+        - String uid
+        - String name
+        - String email
+        - String role
+        + User()
+        + User(uid, name, email, role)
+        + boolean isStudent()
+        + boolean isOrganizer()
+        + getters and setters
+    }
+
+    class RSVP {
+        - String rsvpId
+        - String studentId
+        - String eventId
+        - Timestamp timestamp
+        - String status
+        + RSVP()
+        + RSVP(rsvpId, studentId, eventId, ...)
+        + boolean isConfirmed()
+        + getters and setters
+    }
+}
+
+' Service Classes
+package "Service" {
+    class FirestoreService {
+        - FirebaseFirestore db
+        + void getLiveEvents(EventListCallback)
+        + void getEventsByCategory(String, EventListCallback)
+        + void getEventById(String, EventCallback)
+        + void getEventsByOrganizer(String, EventListCallback)
+        + void createEvent(Event, SimpleCallback)
+        + void updateEvent(Event, SimpleCallback)
+        + void deleteEvent(String, SimpleCallback)
+        + void rsvpToEvent(String, String, SimpleCallback)
+        + void cancelRsvp(String, String, SimpleCallback)
+        + void hasUserRsvped(String, String, BooleanCallback)
+    }
+
+    class AuthService {
+        - FirebaseAuth auth
+        - FirestoreService firestoreService
+        + void register(String, String, String, String, AuthCallback)
+        + void login(String, String, AuthCallback)
+        + void logout()
+        + User getCurrentUser()
+    }
+
+    interface "EventListCallback" {
+        + void onSuccess(List<Event>)
+        + void onFailure(String)
+    }
+
+    interface "EventCallback" {
+        + void onSuccess(Event)
+        + void onFailure(String)
+    }
+
+    interface "SimpleCallback" {
+        + void onSuccess()
+        + void onFailure(String)
+    }
+
+    interface "BooleanCallback" {
+        + void onResult(boolean)
+        + void onFailure(String)
+    }
+
+    interface "AuthCallback" {
+        + void onSuccess(User)
+        + void onFailure(String)
+    }
+}
+
+' View Classes
+package "View" {
+    class EventListActivity {
+        - RecyclerView recyclerView
+        - EventAdapter eventAdapter
+        - EditText searchBar
+        - ChipGroup categoryChips
+        - FirestoreService firestoreService
+        - void loadEvents()
+        - void applyFilters()
+    }
+
+    class EventDetailActivity {
+        - Event currentEvent
+        - FirestoreService firestoreService
+        - void loadEventDetails()
+        - void handleRsvp()
+        - void handleCancelRsvp()
+        - void updateRsvpButtons()
+    }
+
+    class OrganizerDashboardActivity {
+        - RecyclerView recyclerView
+        - OrganizerEventAdapter eventAdapter
+        - FirestoreService firestoreService
+        - void loadOrganizerEvents()
+    }
+
+    class CreateEventActivity {
+        - FirestoreService firestoreService
+        - Calendar selectedDateTime
+        - void createEvent()
+        - boolean validateInputs()
+    }
+
+    class EditEventActivity {
+        - Event currentEvent
+        - FirestoreService firestoreService
+        - void loadEventData()
+        - void updateEvent()
+        - void deleteEvent()
+    }
+
+    class EventAdapter {
+        - List<Event> events
+        - List<Event> eventsFiltered
+        + void updateEvents(List<Event>)
+        + void filter(String)
+        + void filterByCategory(String)
+    }
+
+    class OrganizerEventAdapter {
+        - List<Event> events
+        + void updateEvents(List<Event>)
+    }
+
+    class LoginActivity {
+        - AuthService authService
+        - void handleLogin()
+    }
+
+    class RegisterActivity {
+        - AuthService authService
+        - void handleRegister()
+    }
+}
+
+' Utils
+package "Utils" {
+    class Constants {
+        + {static} String COLLECTION_EVENTS
+        + {static} String COLLECTION_USERS
+        + {static} String COLLECTION_RSVPS
+        + {static} String ROLE_STUDENT
+        + {static} String ROLE_ORGANIZER
+        + {static} String ROLE_STAFF
+        + {static} String STATUS_LIVE
+        + {static} String STATUS_DRAFT
+        + {static} String STATUS_CANCELLED
+        + {static} String CATEGORY_TALKS
+        + {static} String CATEGORY_SPORTS
+        + {static} String CATEGORY_CLUBS
+        + {static} String CATEGORY_PERFORMANCES
+    }
+}
+
+' Relationships
+FirestoreService ..> Event : uses
+FirestoreService ..> RSVP : uses
+FirestoreService ..> EventListCallback : implements
+FirestoreService ..> EventCallback : implements
+FirestoreService ..> SimpleCallback : implements
+FirestoreService ..> BooleanCallback : implements
+
+AuthService ..> User : uses
+AuthService ..> FirestoreService : uses
+AuthService ..> AuthCallback : implements
+
+EventListActivity --> EventAdapter : uses
+EventListActivity --> FirestoreService : uses
+EventAdapter --> Event : displays
+
+EventDetailActivity --> FirestoreService : uses
+EventDetailActivity --> Event : displays
+
+OrganizerDashboardActivity --> OrganizerEventAdapter : uses
+OrganizerDashboardActivity --> FirestoreService : uses
+OrganizerEventAdapter --> Event : displays
+
+CreateEventActivity --> FirestoreService : uses
+CreateEventActivity --> Event : creates
+
+EditEventActivity --> FirestoreService : uses
+EditEventActivity --> Event : updates
+
+LoginActivity --> AuthService : uses
+RegisterActivity --> AuthService : uses
+
+Event "1" -- "0..*" RSVP : has
+User "1" -- "0..*" Event : organizes
+User "1" -- "0..*" RSVP : makes
+
+@enduml

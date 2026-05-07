@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Campus Events"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CampusEventsTest"
+        tools:targetApi="31">
+
+        <!-- Login (Launcher) -->
+        <activity
+            android:name=".view.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Register -->
+        <activity
+            android:name=".view.RegisterActivity"
+            android:exported="false" />
+
+        <!-- Student: Event List -->
+        <activity
+            android:name=".view.EventListActivity"
+            android:exported="false" />
+
+        <!-- Student: Event Detail -->
+        <activity
+            android:name=".view.EventDetailActivity"
+            android:exported="false" />
+
+        <!-- Organizer: Dashboard -->
+        <activity
+            android:name=".view.OrganizerDashboardActivity"
+            android:exported="false" />
+
+        <!-- Organizer: Create Event -->
+        <activity
+            android:name=".view.CreateEventActivity"
+            android:exported="false" />
+
+        <!-- Organizer: Edit Event -->
+        <activity
+            android:name=".view.EditEventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.MyCalendarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.BroadcastMessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.StaffApprovalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.AnalyticsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.TicketActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.NotificationsActivity"
+            android:exported="false" />
+
+    </application>
+
+</manifest>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="?android:attr/colorBackground">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Broadcast Message"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Use “Broadcast to attendees” on an event card to fill the Event ID automatically. Confirmed RSVPs only."
+        android:textSize="13sp"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Firestore Event ID"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/broadcast_event_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Paste event document ID or open from dashboard card"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/broadcast_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Message to attendees"
+        android:minLines="4"
+        android:gravity="top"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/send_broadcast_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Broadcast" />
+
+</LinearLayout>

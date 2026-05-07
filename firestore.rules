@@ -1,0 +1,100 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userDocPath() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    /** Staff workflows read role from the users profile (must exist for staff accounts). */
+    function isStaff() {
+      return signedIn()
+          && exists(userDocPath())
+          && get(userDocPath()).data.role == 'staff';
+    }
+
+    /** Organizer owns the event document. */
+    function isEventOrganizer() {
+      return signedIn() && resource.data.organizerId == request.auth.uid;
+    }
+
+    /**
+     * RSVP / cancel-RSVP batches only bump rsvpCount on the event (FirestoreService uses increment).
+     * Do NOT rely on Map.diff().affectedKeys().hasOnly(...) here — it is unreliable with
+     * FieldValue.increment in many rule evaluations / simulators; compare values explicitly instead.
+     */
+    function organizerUnchanged() {
+      return request.resource.data.organizerId == resource.data.organizerId;
+    }
+
+    function rsvpCountDeltaOk() {
+      let before = resource.data.rsvpCount;
+      let after = request.resource.data.rsvpCount;
+      // Missing rsvpCount + increment behaves like 0 -> 1 on first RSVP.
+      return (before == null && after == 1)
+          || (before != null && after == before + 1)
+          || (before != null && after == before - 1);
+    }
+
+    function isAttendeeRsvpCounterBump() {
+      return signedIn() && organizerUnchanged() && rsvpCountDeltaOk();
+    }
+
+    /** Staff approve/reject: only status changes; avoid fragile Map.diff for increment-heavy docs. */
+    function isStaffStatusUpdate() {
+      return isStaff()
+          && organizerUnchanged()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+    }
+
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth.uid == userId;
+    }
+
+    match /events/{eventId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+          && request.resource.data.organizerId == request.auth.uid;
+      allow update: if isEventOrganizer() || isAttendeeRsvpCounterBump() || isStaffStatusUpdate();
+      allow delete: if isEventOrganizer();
+    }
+
+    match /rsvps/{rsvpId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+          && request.resource.data.studentId == request.auth.uid;
+      allow update, delete: if request.auth != null
+          && resource.data.studentId == request.auth.uid;
+    }
+
+    match /waitlist/{waitlistId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+          && request.resource.data.studentId == request.auth.uid;
+      allow update, delete: if request.auth != null
+          && resource.data.studentId == request.auth.uid;
+    }
+
+    match /tickets/{ticketId} {
+      allow read: if request.auth != null
+          && resource.data.studentId == request.auth.uid;
+      allow create: if request.auth != null
+          && request.resource.data.studentId == request.auth.uid;
+      allow update, delete: if request.auth != null
+          && resource.data.studentId == request.auth.uid;
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if request.auth != null
+          && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null
+          && resource.data.userId == request.auth.uid;
+    }
+  }
+}
