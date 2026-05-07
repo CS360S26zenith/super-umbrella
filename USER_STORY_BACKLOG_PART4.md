@@ -21,7 +21,7 @@ Therefore, this Part 4 backlog contains the remaining product stories not covere
 ## PART 4 USER STORIES (Remaining from Product Backlog)
 
 ### US-05: Personalized Recommendations
-**Status:** Implemented (simple heuristic)  
+**Status:** PARTIAL (basic heuristic only)  
 **Priority:** High  
 **Story Points:** 13
 
@@ -41,7 +41,7 @@ As a student, I want to see personalized event recommendations based on my inter
 ---
 
 ### US-09: Join Waitlist for Full Events
-**Status:** Implemented  
+**Status:** COMPLETE  
 **Priority:** Medium  
 **Story Points:** 5
 
@@ -61,7 +61,7 @@ As a student, I want to join a waitlist when an event is full so that I'm notifi
 ---
 
 ### US-10: Add RSVPed Event to Personal Calendar
-**Status:** Implemented  
+**Status:** COMPLETE  
 **Priority:** High  
 **Story Points:** 8
 
@@ -79,7 +79,7 @@ As a student, I want to add an RSVPed event to my personal calendar so that it a
 ---
 
 ### US-11: Calendar View for My RSVPed Events
-**Status:** Implemented (list-style view)  
+**Status:** PARTIAL (list view, not full calendar UI)  
 **Priority:** Medium  
 **Story Points:** 5
 
@@ -98,7 +98,7 @@ As a student, I want to view a calendar view of all events I've RSVPed to so tha
 ---
 
 ### US-12: Notification on Event Update/Cancel
-**Status:** Implemented (in-app inbox notifications)  
+**Status:** PARTIAL (in-app notifications only)  
 **Priority:** High  
 **Story Points:** 8
 
@@ -118,7 +118,7 @@ As a student, I want to receive a notification when an event I've RSVPed to is u
 ---
 
 ### US-13: Reminder Notification Before Event
-**Status:** Implemented (in-app + tray at RSVP time)  
+**Status:** PARTIAL (confirmation/inbox flow, not true scheduled reminder)  
 **Priority:** Medium  
 **Story Points:** 5
 
@@ -138,7 +138,7 @@ As a student, I want to receive a reminder notification before an event I've RSV
 ---
 
 ### US-16: Organizer Cancels Event and Notifies Attendees
-**Status:** Implemented  
+**Status:** PARTIAL (core flow works, needs reliability/coverage checks)  
 **Priority:** Medium  
 **Story Points:** 5
 
@@ -157,7 +157,7 @@ As a club leader, I want to cancel an event so that registered attendees are not
 ---
 
 ### US-18: Export Attendee List
-**Status:** Implemented  
+**Status:** PARTIAL (basic export/share flow)  
 **Priority:** Low  
 **Story Points:** 3
 
@@ -175,7 +175,7 @@ As a club leader, I want to export the attendee list for an event so that I can 
 ---
 
 ### US-19: Organizer Broadcast to RSVPed Attendees
-**Status:** Implemented  
+**Status:** COMPLETE  
 **Priority:** Medium  
 **Story Points:** 5
 
@@ -195,7 +195,7 @@ As a club leader, I want to send a broadcast message to all RSVPed attendees so 
 ---
 
 ### US-21: QR Ticket Generation for Attendees
-**Status:** Implemented (text payload ticket)  
+**Status:** PARTIAL (payload ticket exists, real QR workflow pending)  
 **Priority:** High  
 **Story Points:** 8
 
@@ -215,7 +215,7 @@ As a club leader, I want to generate QR-code tickets for attendees so that check
 ---
 
 ### US-22: Staff Approval/Rejection Before Events Go Live
-**Status:** Implemented (workflow available; optional in current release policy)  
+**Status:** PARTIAL (workflow exists, release policy still inconsistent)  
 **Priority:** Medium  
 **Story Points:** 5
 
@@ -233,7 +233,7 @@ As LUMS staff, I want to approve or reject event submissions before they go live
 ---
 
 ### US-23: Platform Analytics for Staff
-**Status:** Implemented (basic analytics)  
+**Status:** PARTIAL (basic metrics only)  
 **Priority:** Medium  
 **Story Points:** 8
 
@@ -255,7 +255,7 @@ As LUMS staff, I want to view platform-wide analytics (total events, RSVPs, popu
 This section preserves improvement room from earlier planning and README notes.
 
 ### I-01: Stronger recommendation quality
-**Status:** In progress  
+**Status:** PARTIAL  
 **Source:** Part 3 planned enhancements
 
 Scope examples:
@@ -263,21 +263,21 @@ Scope examples:
 - Include recency/time and user profile signals.
 
 ### I-02: True push reminder delivery
-**Status:** Not started  
+**Status:** NOT STARTED  
 **Source:** Part 3 planned enhancements
 
 Scope examples:
 - Add FCM push for event reminders/updates rather than inbox-only storage.
 
 ### I-03: Real QR image rendering / scan flow
-**Status:** Partial  
+**Status:** PARTIAL  
 **Source:** Part 3 planned enhancements
 
 Scope examples:
 - Replace text payload-only ticket display with real QR bitmap and scan/check-in flow.
 
 ### I-04: Staff moderation hardening
-**Status:** Partial  
+**Status:** PARTIAL  
 **Source:** Part 3 planned enhancements + context notes
 
 Scope examples:
@@ -286,7 +286,67 @@ Scope examples:
 
 ---
 
+## Future-Facing Enhancements (Optional After Core US Completion)
+
+These are intentionally separated from core backlog completion. Work on these only after required Part 4 user stories are stable for final demo.
+
+Priority checklist:
+- Finish all core Part 4 user stories first (US-05, US-09, US-10, US-11, US-12, US-13, US-16, US-18, US-19, US-21, US-22, US-23).
+- Then pick optional enhancements in this order: I-05 -> I-06 -> I-07.
+
+### I-05: Role selection and role-based onboarding hardening
+**Status:** NOT STARTED  
+**Source:** Team improvement idea
+
+Scope examples:
+- Add explicit and consistent role selection/handling for student, organizer, and staff.
+- Improve first-login flow and role validation UX.
+
+### I-06: Society profiles and event publisher identity
+**Status:** NOT STARTED  
+**Source:** Team improvement idea
+
+Scope examples:
+- Add society/club profile pages with details and posted events.
+- Show publisher identity consistently on event cards/details.
+
+### I-07: In-app assistant/chatbot for event help
+**Status:** NOT STARTED  
+**Source:** Team improvement idea
+
+Scope examples:
+- Add chatbot/help assistant for event discovery and FAQs.
+- Connect assistant responses to event data and filters.
+
+---
+
 ## Final Notes
 
 - Part 3 stories remain documented in `USER_STORY_BACKLOG.md`.
 - This file captures the **remaining product backlog stories** and improvement carryover for final delivery alignment.
+
+---
+
+## Definition of Done (Final Submission + 3-Min Demo)
+
+### Global DoD (applies to all US-01 to US-25)
+- Every story in the original backlog (US-01..US-25) is demoable live in one coherent 3-minute flow without blockers.
+- Core paths complete without crashes, permission errors, or broken navigation.
+- Firestore/Auth/rules configuration supports all demonstrated flows on device.
+- UI is readable and usable enough for evaluator walkthrough (not just backend-complete).
+
+### DoD Targets for PARTIAL / NOT STARTED Items
+
+- **US-05 (PARTIAL):** Recommendations reflect selected chip and prior RSVP history with stable ranking behavior in live testing.
+- **US-11 (PARTIAL):** "My Calendar" experience is clearly schedule-oriented and reliably shows all confirmed RSVPs.
+- **US-12 (PARTIAL):** Event update/cancel notifications consistently appear for affected attendees in inbox flow.
+- **US-13 (PARTIAL):** Reminder behavior is explicitly triggered and visible to user (inbox/tray) for RSVP events.
+- **US-16 (PARTIAL):** Event cancel path consistently updates status and notifies attendees in end-to-end test.
+- **US-18 (PARTIAL):** Attendee export is usable in demo (clear output, sharable, event-scoped correctness).
+- **US-21 (PARTIAL):** Ticket flow is end-to-end reliable; if QR image is not implemented, payload behavior is explicitly documented and consistently shown.
+- **US-22 (PARTIAL):** Staff approval/rejection works with one enforced and documented publish policy for final demo.
+- **US-23 (PARTIAL):** Analytics screen shows meaningful, correct metrics loaded from current data.
+- **I-02 (NOT STARTED):** Decide and document whether true push reminders are in-scope for final; if out-of-scope, keep backlog item deferred.
+- **I-05 (NOT STARTED):** Role onboarding UX is explicit and consistent for student/organizer/staff.
+- **I-06 (NOT STARTED):** Society/publisher identity is visible and connected to event listings/details.
+- **I-07 (NOT STARTED):** Chatbot is either implemented as MVP or explicitly deferred with rationale in final backlog.
