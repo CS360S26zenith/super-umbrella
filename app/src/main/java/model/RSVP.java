@@ -35,12 +35,23 @@ public class RSVP {
     }
 
     /**
+     * Full constructor used by tests and explicit object construction flows.
+     */
+    public RSVP(String id, String studentId, String eventId, Timestamp timestamp, String status) {
+        this.id = id;
+        this.studentId = studentId;
+        this.eventId = eventId;
+        this.timestamp = timestamp;
+        this.status = status;
+    }
+
+    /**
      * Checks if this RSVP is still active (confirmed).
      *
      * @return true if status equals "confirmed"
      */
     public boolean isConfirmed() {
-        return "confirmed".equals(status);
+        return status != null && "confirmed".equalsIgnoreCase(status.trim());
     }
 
     /**
@@ -49,6 +60,13 @@ public class RSVP {
      * @return the RSVP ID
      */
     public String getId() {
+        return id;
+    }
+
+    /**
+     * Compatibility alias used by existing tests and legacy callers.
+     */
+    public String getRsvpId() {
         return id;
     }
 

@@ -126,39 +126,74 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         });
 
         broadcastButton.setOnClickListener(v -> {
-            startActivity(new Intent(OrganizerDashboardActivity.this, BroadcastMessageActivity.class));
+            if (organizerEvents.isEmpty()) {
+                Toast.makeText(this, "No events available for broadcast.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            showEventPicker("Broadcast message for which event?", event -> {
+                Intent intent = new Intent(OrganizerDashboardActivity.this, BroadcastMessageActivity.class);
+                intent.putExtra(Constants.EXTRA_EVENT_ID, event.getEventId());
+                intent.putExtra(Constants.EXTRA_EVENT_TITLE, event.getTitle());
+                startActivity(intent);
+            });
         });
 
-        exportAttendeesButton.setOnClickListener(v -> exportAttendeesForFirstEvent());
+        exportAttendeesButton.setOnClickListener(v -> exportAttendeesForSelectedEvent());
     }
 
-    private void exportAttendeesForFirstEvent() {
+    private void exportAttendeesForSelectedEvent() {
         if (organizerEvents.isEmpty()) {
             Toast.makeText(this, "No events to export", Toast.LENGTH_SHORT).show();
             return;
         }
-        Event event = organizerEvents.get(0);
-        firestoreService.getAttendeeIdsForEvent(event.getEventId(), new FirestoreService.UserIdListCallback() {
-            @Override
-            public void onSuccess(List<String> userIds) {
-                String csv = "eventId,studentId\n";
-                StringBuilder builder = new StringBuilder(csv);
-                for (String userId : userIds) {
-                    builder.append(event.getEventId()).append(",").append(userId).append("\n");
-                }
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/csv");
-                share.putExtra(Intent.EXTRA_SUBJECT, "Attendees - " + event.getTitle());
-                share.putExtra(Intent.EXTRA_TEXT, builder.toString());
-                startActivity(Intent.createChooser(share, "Export attendee list"));
-            }
+        showEventPicker("Export attendees for which event?", event ->
+                firestoreService.getAttendeeIdsForEvent(event.getEventId(), new FirestoreService.UserIdListCallback() {
+                    @Override
+                    public void onSuccess(List<String> userIds) {
+                        String csv = "eventId,eventTitle,studentId\n";
+                        StringBuilder builder = new StringBuilder(csv);
+                        for (String userId : userIds) {
+                            builder.append(event.getEventId()).append(",")
+                                    .append(escapeCsv(event.getTitle())).append(",")
+                                    .append(userId).append("\n");
+                        }
+                        Intent share = new Intent(Intent.ACTION_SEND);
+                        share.setType("text/csv");
+                        share.putExtra(Intent.EXTRA_SUBJECT, "Attendees - " + event.getTitle());
+                        share.putExtra(Intent.EXTRA_TEXT, builder.toString());
+                        startActivity(Intent.createChooser(share, "Export attendee list"));
+                    }
 
-            @Override
-            public void onFailure(String error) {
-                Toast.makeText(OrganizerDashboardActivity.this, error, Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(String error) {
+                        Toast.makeText(OrganizerDashboardActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                }));
     }
+
+    private interface EventSelectionCallback {
+        void onSelected(Event event);
+    }
+
+    private void showEventPicker(String title, EventSelectionCallback callback) {
+        CharSequence[] labels = new CharSequence[organizerEvents.size()];
+        for (int i = 0; i < organizerEvents.size(); i++) {
+            Event event = organizerEvents.get(i);
+            labels[i] = event.getTitle() + " (" + event.getCategory() + ")";
+        }
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(title)
+                .setItems(labels, (dialog, which) -> callback.onSelected(organizerEvents.get(which)))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private String escapeCsv(String value) {
+        if (value == null) {
+            return "";
+        }
+        return "\"" + value.replace("\"", "\"\"") + "\"";
+                }
 
     /**
      * Loads all events created by the current organizer from Firestore.

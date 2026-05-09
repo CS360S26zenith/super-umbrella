@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(User user) {
                 progressBar.setVisibility(View.GONE);
                 loginButton.setEnabled(true);
+                authService.syncPushToken();
                 routeUser(user);
             }
 

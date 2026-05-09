@@ -8,22 +8,29 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Calendar"
-        android:textSize="24sp"
+        android:text="Help Assistant"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:layout_marginBottom="12dp" />
 
-    <TextView
-        android:id="@+id/calendar_empty_text"
+    <EditText
+        android:id="@+id/help_question_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Loading..."
-        android:textSize="16sp"
+        android:hint="Ask a question (e.g. How to RSVP?)"
         android:layout_marginBottom="8dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/calendar_recycler"
+    <Button
+        android:id="@+id/help_ask_button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:text="Ask" />
+
+    <TextView
+        android:id="@+id/help_answer_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ask anything about using the app."
+        android:textSize="16sp"
+        android:layout_marginTop="16dp" />
 </LinearLayout>

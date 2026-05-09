@@ -50,44 +50,40 @@ public class StaffApprovalActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Event event = pendingEvents.get(position);
-            firestoreService.updateEventStatus(event.getEventId(), Constants.STATUS_LIVE,
-                    new FirestoreService.SimpleCallback() {
-                        @Override
-                        public void onSuccess() {
-                            Toast.makeText(StaffApprovalActivity.this,
-                                    "Event approved", Toast.LENGTH_SHORT).show();
-                            recreate();
-                        }
-
-                        @Override
-                        public void onFailure(String error) {
-                            Toast.makeText(StaffApprovalActivity.this,
-                                    error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        });
-
-        listView.setOnItemLongClickListener((parent, view, position, id) -> {
-            Event event = pendingEvents.get(position);
-            firestoreService.updateEventStatus(event.getEventId(), Constants.STATUS_CANCELLED,
-                    new FirestoreService.SimpleCallback() {
-                        @Override
-                        public void onSuccess() {
-                            Toast.makeText(StaffApprovalActivity.this,
-                                    "Event rejected", Toast.LENGTH_SHORT).show();
-                            recreate();
-                        }
-
-                        @Override
-                        public void onFailure(String error) {
-                            Toast.makeText(StaffApprovalActivity.this,
-                                    error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-            return true;
+            showModerationDialog(firestoreService, event);
         });
 
         findViewById(R.id.open_analytics_button).setOnClickListener(v ->
                 startActivity(new Intent(StaffApprovalActivity.this, AnalyticsActivity.class)));
+    }
+
+    private void showModerationDialog(FirestoreService firestoreService, Event event) {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(event.getTitle())
+                .setMessage("Choose moderation action for this event.")
+                .setPositiveButton("Approve", (dialog, which) ->
+                        updateStatus(firestoreService, event, Constants.STATUS_LIVE, "approved"))
+                .setNegativeButton("Reject", (dialog, which) ->
+                        updateStatus(firestoreService, event, Constants.STATUS_CANCELLED, "rejected"))
+                .setNeutralButton("Cancel", null)
+                .show();
+    }
+
+    private void updateStatus(FirestoreService firestoreService, Event event,
+            String status, String actionLabel) {
+        firestoreService.updateEventStatus(event.getEventId(), status, new FirestoreService.SimpleCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(StaffApprovalActivity.this,
+                        "Event " + actionLabel, Toast.LENGTH_SHORT).show();
+                recreate();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(StaffApprovalActivity.this,
+                        error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

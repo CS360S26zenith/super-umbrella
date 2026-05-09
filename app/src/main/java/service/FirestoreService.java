@@ -570,6 +570,29 @@ public class FirestoreService {
         void onFailure(String error);
     }
 
+    public interface AnalyticsCallback {
+        void onSuccess(PlatformAnalytics analytics);
+        void onFailure(String error);
+    }
+
+    public static class PlatformAnalytics {
+        private int totalEvents;
+        private int totalRsvps;
+        private int liveEvents;
+        private int draftEvents;
+        private int cancelledEvents;
+        private int averageRsvpsPerEvent;
+        private Map<String, Integer> categoryCounts = new HashMap<>();
+
+        public int getTotalEvents() { return totalEvents; }
+        public int getTotalRsvps() { return totalRsvps; }
+        public int getLiveEvents() { return liveEvents; }
+        public int getDraftEvents() { return draftEvents; }
+        public int getCancelledEvents() { return cancelledEvents; }
+        public int getAverageRsvpsPerEvent() { return averageRsvpsPerEvent; }
+        public Map<String, Integer> getCategoryCounts() { return categoryCounts; }
+    }
+
     public void getPendingEvents(final EventListCallback callback) {
         db.collection(Constants.COLLECTION_EVENTS)
                 .whereEqualTo("status", Constants.STATUS_DRAFT)
@@ -621,6 +644,41 @@ public class FirestoreService {
                             })
                             .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
                 })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    public void getPlatformAnalyticsDetailed(final AnalyticsCallback callback) {
+        db.collection(Constants.COLLECTION_EVENTS).get()
+                .addOnSuccessListener(eventSnapshot -> db.collection(Constants.COLLECTION_RSVPS)
+                        .whereEqualTo("status", Constants.STATUS_CONFIRMED)
+                        .get()
+                        .addOnSuccessListener(rsvpSnapshot -> {
+                            PlatformAnalytics analytics = new PlatformAnalytics();
+                            analytics.totalEvents = eventSnapshot.size();
+                            analytics.totalRsvps = rsvpSnapshot.size();
+                            analytics.averageRsvpsPerEvent = analytics.totalEvents == 0
+                                    ? 0 : analytics.totalRsvps / analytics.totalEvents;
+
+                            for (QueryDocumentSnapshot doc : eventSnapshot) {
+                                String status = doc.getString("status");
+                                if (Constants.STATUS_LIVE.equalsIgnoreCase(status)) {
+                                    analytics.liveEvents++;
+                                } else if (Constants.STATUS_DRAFT.equalsIgnoreCase(status)) {
+                                    analytics.draftEvents++;
+                                } else if (Constants.STATUS_CANCELLED.equalsIgnoreCase(status)) {
+                                    analytics.cancelledEvents++;
+                                }
+                                String category = doc.getString("category");
+                                if (category != null && !category.trim().isEmpty()) {
+                                    analytics.categoryCounts.put(
+                                            category,
+                                            analytics.categoryCounts.getOrDefault(category, 0) + 1
+                                    );
+                                }
+                            }
+                            callback.onSuccess(analytics);
+                        })
+                        .addOnFailureListener(e -> callback.onFailure(e.getMessage())))
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 

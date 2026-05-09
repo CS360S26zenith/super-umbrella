@@ -13,6 +13,14 @@
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
 
+    <ImageView
+        android:id="@+id/ticket_qr_image"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="Ticket QR code"
+        android:layout_marginBottom="16dp" />
+
     <TextView
         android:id="@+id/ticket_text"
         android:layout_width="match_parent"

@@ -24,14 +24,23 @@ public class RecommendationService {
     }
 
     private int score(Event event, List<String> preferredCategories) {
-        int score = event.getRsvpCount();
+        int score = event.getRsvpCount() * 2;
         if (event.getCategory() != null) {
             String category = event.getCategory().toLowerCase(Locale.getDefault());
             for (String preferred : preferredCategories) {
                 if (category.equals(preferred.toLowerCase(Locale.getDefault()))) {
-                    score += 100;
+                    score += 120;
                     break;
                 }
+            }
+        }
+        if (event.getDateAsDate() != null) {
+            long daysUntil = Math.max(0L,
+                    (event.getDateAsDate().getTime() - System.currentTimeMillis()) / (24L * 60 * 60 * 1000));
+            if (daysUntil <= 7) {
+                score += 20;
+            } else if (daysUntil <= 30) {
+                score += 10;
             }
         }
         return score;

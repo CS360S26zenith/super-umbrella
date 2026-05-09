@@ -1,6 +1,9 @@
 package com.example.campuseventstest.view;
 
 import android.os.Bundle;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.campuseventstest.R;
 import com.example.campuseventstest.service.FirestoreService;
 import com.example.campuseventstest.utils.Constants;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
@@ -15,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public class TicketActivity extends AppCompatActivity {
     private TextView ticketText;
+    private ImageView qrImage;
     private FirestoreService firestoreService;
 
     @Override
@@ -23,6 +31,7 @@ public class TicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticket);
 
         ticketText = findViewById(R.id.ticket_text);
+        qrImage = findViewById(R.id.ticket_qr_image);
         firestoreService = new FirestoreService();
 
         String rawEventId = getIntent().getStringExtra(Constants.EXTRA_EVENT_ID);
@@ -47,6 +56,10 @@ public class TicketActivity extends AppCompatActivity {
         firestoreService.generateTicketForRsvp(userId, resolvedEventId, new FirestoreService.StringCallback() {
             @Override
             public void onSuccess(String value) {
+                Bitmap bitmap = generateQrBitmap(value, 512);
+                if (bitmap != null) {
+                    qrImage.setImageBitmap(bitmap);
+                }
                 ticketText.setText("Event: "
                         + (resolvedEventTitle != null ? resolvedEventTitle : "(unknown)")
                         + "\n\nQR Payload:\n" + value);
@@ -59,5 +72,20 @@ public class TicketActivity extends AppCompatActivity {
                         + "Also confirm Firestore rules allow read/write on the \"tickets\" collection.");
             }
         });
+    }
+
+    private Bitmap generateQrBitmap(String payload, int size) {
+        try {
+            BitMatrix matrix = new QRCodeWriter().encode(payload, BarcodeFormat.QR_CODE, size, size);
+            Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+            for (int x = 0; x < size; x++) {
+                for (int y = 0; y < size; y++) {
+                    bitmap.setPixel(x, y, matrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            return bitmap;
+        } catch (WriterException e) {
+            return null;
+        }
     }
 }

@@ -11,6 +11,9 @@ public class User {
     private String name;
     private String email;
     private String role;
+    private String organizationName;
+    private String organizationBio;
+    private String fcmToken;
 
     /**
      * Required empty constructor for Firestore deserialization.
@@ -39,7 +42,7 @@ public class User {
      * @return true if role equals "organizer"
      */
     public boolean isOrganizer() {
-        return "organizer".equalsIgnoreCase(role);
+        return role != null && "organizer".equalsIgnoreCase(role.trim());
     }
 
     /**
@@ -48,7 +51,7 @@ public class User {
      * @return true if role equals "student"
      */
     public boolean isStudent() {
-        return "student".equalsIgnoreCase(role);
+        return role != null && "student".equalsIgnoreCase(role.trim());
     }
 
     /**
@@ -121,5 +124,29 @@ public class User {
      */
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    public String getOrganizationBio() {
+        return organizationBio;
+    }
+
+    public void setOrganizationBio(String organizationBio) {
+        this.organizationBio = organizationBio;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

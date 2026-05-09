@@ -7,6 +7,10 @@ android {
     namespace 'com.example.campuseventstest'
     compileSdk 34
 
+    buildFeatures {
+        buildConfig true
+    }
+
     defaultConfig {
         applicationId "com.example.campuseventstest"
         minSdk 24
@@ -15,6 +19,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "TEST_STUDENT_EMAIL", "\"${project.findProperty('TEST_STUDENT_EMAIL') ?: ''}\""
+        buildConfigField "String", "TEST_STUDENT_PASSWORD", "\"${project.findProperty('TEST_STUDENT_PASSWORD') ?: ''}\""
+        buildConfigField "String", "TEST_EVENT_ID", "\"${project.findProperty('TEST_EVENT_ID') ?: ''}\""
     }
 
     buildTypes {
@@ -43,9 +50,12 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.7.0')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.zxing:core:3.5.3'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test:core:1.5.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }

@@ -37,6 +37,7 @@ public class BroadcastMessageActivity extends AppCompatActivity {
         }
         if (prefilledId != null && !prefilledId.isEmpty()) {
             eventIdInput.setText(prefilledId);
+            eventIdInput.setEnabled(false);
         }
         if (prefilledTitle != null && !prefilledTitle.isEmpty()) {
             setTitle("Broadcast — " + prefilledTitle);

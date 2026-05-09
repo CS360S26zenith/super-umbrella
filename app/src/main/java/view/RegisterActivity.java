@@ -27,6 +27,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText nameInput;
     private EditText emailInput;
     private EditText passwordInput;
+    private EditText organizationNameInput;
+    private EditText organizationBioInput;
     private RadioGroup roleGroup;
     private Button registerButton;
     private ProgressBar progressBar;
@@ -42,11 +44,18 @@ public class RegisterActivity extends AppCompatActivity {
         nameInput = findViewById(R.id.nameInput);
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
+        organizationNameInput = findViewById(R.id.organizationNameInput);
+        organizationBioInput = findViewById(R.id.organizationBioInput);
         roleGroup = findViewById(R.id.roleGroup);
         registerButton = findViewById(R.id.registerButton);
         progressBar = findViewById(R.id.progressBar);
 
         registerButton.setOnClickListener(v -> attemptRegister());
+        roleGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            boolean organizer = checkedId == R.id.roleOrganizer;
+            organizationNameInput.setVisibility(organizer ? View.VISIBLE : View.GONE);
+            organizationBioInput.setVisibility(organizer ? View.VISIBLE : View.GONE);
+        });
     }
 
     /**
@@ -56,6 +65,8 @@ public class RegisterActivity extends AppCompatActivity {
         String name = nameInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
+        String organizationName = organizationNameInput.getText().toString().trim();
+        String organizationBio = organizationBioInput.getText().toString().trim();
 
         int selectedId = roleGroup.getCheckedRadioButtonId();
         if (selectedId == -1) {
@@ -80,10 +91,26 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if (Constants.ROLE_ORGANIZER.equals(role)) {
+            if (TextUtils.isEmpty(organizationName)) {
+                Toast.makeText(this, "Organizer must provide organization name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (organizationBio.length() < 10) {
+                Toast.makeText(this, "Organization bio should be at least 10 characters",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else {
+            organizationName = null;
+            organizationBio = null;
+        }
+
         progressBar.setVisibility(View.VISIBLE);
         registerButton.setEnabled(false);
 
-        authService.register(email, password, name, role, new AuthService.AuthCallback() {
+        authService.register(email, password, name, role, organizationName, organizationBio,
+                new AuthService.AuthCallback() {
             @Override
             public void onSuccess(User user) {
                 progressBar.setVisibility(View.GONE);

@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +49,11 @@ public class AuthService {
      */
     public void register(String email, String password, String name, String role,
                          final AuthCallback callback) {
+        register(email, password, name, role, null, null, callback);
+    }
+
+    public void register(String email, String password, String name, String role,
+            String organizationName, String organizationBio, final AuthCallback callback) {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -58,6 +64,8 @@ public class AuthService {
 
                             // Create User object
                             User user = new User(uid, name, email, role.toLowerCase());
+                            user.setOrganizationName(organizationName);
+                            user.setOrganizationBio(organizationBio);
 
                             // Save to Firestore using UID as document ID
                             saveUserToFirestore(user, callback);
@@ -109,6 +117,8 @@ public class AuthService {
         data.put("name", user.getName());
         data.put("email", user.getEmail());
         data.put("role", user.getRole());
+        data.put("organizationName", user.getOrganizationName());
+        data.put("organizationBio", user.getOrganizationBio());
 
         // CRITICAL: Use uid as document ID
         db.collection(Constants.COLLECTION_USERS)
@@ -167,5 +177,16 @@ public class AuthService {
      */
     public void logout() {
         auth.signOut();
+    }
+
+    public void syncPushToken() {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) {
+            return;
+        }
+        FirebaseMessaging.getInstance().getToken()
+                .addOnSuccessListener(token -> db.collection(Constants.COLLECTION_USERS)
+                        .document(currentUser.getUid())
+                        .update("fcmToken", token));
     }
 }

@@ -366,13 +366,27 @@ public class EditEventActivity extends AppCompatActivity {
                                 eventId,
                                 "Event Updated",
                                 updatedEvent.getTitle() + " has updated details.",
-                                "event_update"
-                        );
+                                "event_update",
+                                new NotificationService.NotificationDispatchCallback() {
+                                    @Override
+                                    public void onSuccess(int deliveredCount) {
+                                        // Keep toast concise and avoid extra blocking UI work.
+                                    }
+
+                                    @Override
+                                    public void onFailure(String error) {
+                                        Toast.makeText(EditEventActivity.this,
+                                                "Event updated, but notifications failed: " + error,
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                });
                     }
 
                     @Override
                     public void onFailure(String error) {
-                        // Notification is best-effort.
+                        Toast.makeText(EditEventActivity.this,
+                                "Event updated, but attendee lookup failed: " + error,
+                                Toast.LENGTH_LONG).show();
                     }
                 });
                 Toast.makeText(EditEventActivity.this,

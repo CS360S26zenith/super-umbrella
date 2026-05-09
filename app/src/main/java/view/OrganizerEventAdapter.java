@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -157,13 +158,31 @@ public class OrganizerEventAdapter extends RecyclerView.Adapter<OrganizerEventAd
                                                     event.getEventId(),
                                                     "Event Cancelled",
                                                     event.getTitle() + " has been cancelled.",
-                                                    "event_cancelled"
-                                            );
+                                                    "event_cancelled",
+                                                    new NotificationService.NotificationDispatchCallback() {
+                                                        @Override
+                                                        public void onSuccess(int deliveredCount) {
+                                                            Toast.makeText(context,
+                                                                    "Event cancelled. Notifications sent: "
+                                                                            + deliveredCount,
+                                                                    Toast.LENGTH_SHORT).show();
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(String error) {
+                                                            Toast.makeText(context,
+                                                                    "Event cancelled. Notification error: "
+                                                                            + error,
+                                                                    Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
                                         }
 
                                         @Override
                                         public void onFailure(String error) {
-                                            // Notification best-effort only.
+                                            Toast.makeText(context,
+                                                    "Event cancelled. Could not load attendees: " + error,
+                                                    Toast.LENGTH_LONG).show();
                                         }
                                     });
                             event.setStatus(Constants.STATUS_CANCELLED);
@@ -172,7 +191,9 @@ public class OrganizerEventAdapter extends RecyclerView.Adapter<OrganizerEventAd
 
                         @Override
                         public void onFailure(String error) {
-                            // Keep UI unchanged on failure.
+                            Toast.makeText(context,
+                                    "Failed to cancel event: " + error,
+                                    Toast.LENGTH_LONG).show();
                         }
                     }));
 

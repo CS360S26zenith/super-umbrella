@@ -17,11 +17,5 @@ local.properties
 app/google-services.json
 **/build/
 
-
-app/google-services.json
-**/build/
-
-
-app/google-services.json
-**/build/
-
+# Local Firebase Admin key for seed scripts (never commit)
+scripts/serviceAccountKey.json

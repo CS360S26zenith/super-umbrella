@@ -263,12 +263,12 @@ public class CreateEventActivity extends AppCompatActivity {
         loadingBar.setVisibility(View.VISIBLE);
         submitButton.setEnabled(false);
 
-        firestoreService.createEvent(event, new FirestoreService.SimpleCallback() {
+        firestoreService.createEvent(event, true, new FirestoreService.SimpleCallback() {
             @Override
             public void onSuccess() {
                 loadingBar.setVisibility(View.GONE);
                 Toast.makeText(CreateEventActivity.this,
-                        "Event created — it is live for students now.",
+                        "Event submitted for staff approval.",
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
