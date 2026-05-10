@@ -169,7 +169,7 @@ As a club leader, I want to export the attendee list for an event so that I can 
 - Export shares attendee list in CSV-like text format.
 
 **Implementation Evidence:**
-- `app/src/main/java/view/OrganizerHomeFragment.java` (organizer Home tab)
+- `app/src/main/java/view/OrganizerDashboardActivity.java`
 - `app/src/main/java/service/FirestoreService.java`
 
 ---
@@ -292,7 +292,7 @@ These are intentionally separated from core backlog completion. Work on these on
 
 Priority checklist:
 - Finish all core Part 4 user stories first (US-05, US-09, US-10, US-11, US-12, US-13, US-16, US-18, US-19, US-21, US-22, US-23).
-- Then pick optional enhancements in this order: I-05 -> I-06 -> I-07.
+- Then pick optional enhancements in this order: I-05 -> I-06 -> I-08 -> I-07.
 
 ### I-05: Role selection and role-based onboarding hardening
 **Status:** NOT STARTED  
@@ -303,7 +303,7 @@ Scope examples:
 - Improve first-login flow and role validation UX.
 
 ### I-06: Society profiles and event publisher identity
-**Status:** PARTIAL (MVP shipped — directory, follow, society event timeline, organizer tagging)  
+**Status:** PARTIAL (MVP shipped — directory, follow, society-scoped timelines, society tagging on create/edit)  
 **Source:** Team improvement idea
 
 Scope examples:
@@ -313,7 +313,6 @@ Scope examples:
 **Delivered in-tree (iterative improvement):**
 - `societies` collection + student **Campus Societies** list/search/follow and society **Past / Upcoming** event screens (`SocietiesListActivity`, `SocietyEventsActivity`, `CampusSocietyAdapter`).
 - Events carry `societyId` / `societyName`; create/edit forms require an organizing society when the directory is loaded (`CreateEventActivity`, `EditEventActivity`).
-- Organizer shell with bottom navigation **Home**, **My Events**, **Profile** (`OrganizerMainActivity` + fragments).
 - Seed script: `scripts/seed-societies.js` (`npm run seed:societies`).
 
 ### I-07: In-app assistant/chatbot for event help
@@ -323,6 +322,21 @@ Scope examples:
 Scope examples:
 - Add chatbot/help assistant for event discovery and FAQs.
 - Connect assistant responses to event data and filters.
+
+### I-08: Organizer shell navigation (Home / My Events / Profile)
+**Status:** PARTIAL (MVP shipped — tab shell + profile shortcuts; polish vs student nav patterns remains optional)  
+**Source:** Team improvement idea (split out from society work for grading/traceability)
+
+Scope examples:
+- Give organizers a stable primary navigation pattern aligned with multi-area workflows (dashboard vs history vs account).
+- Keep legacy entry paths predictable during rollout.
+
+**Delivered in-tree (iterative improvement):**
+- Bottom-navigation host activity (`OrganizerMainActivity`) with **Home**, **My Events**, and **Profile** (`organizer_bottom_nav.xml`, `activity_organizer_main.xml`).
+- **Home** tab fragment carries organizer dashboard-style flows (`OrganizerHomeFragment`, including list/FAB/broadcast/export patterns previously centered on the dashboard screen).
+- **My Events** summary/history tab (`OrganizerMyEventsFragment`, `fragment_organizer_my_events.xml`).
+- **Profile** tab entry points + sign-out (`OrganizerProfileFragment`, `fragment_organizer_profile.xml`).
+- Organizer login routes to `OrganizerMainActivity`; `OrganizerDashboardActivity` remains as a thin redirect for older references.
 
 ---
 
@@ -355,4 +369,5 @@ Scope examples:
 - **I-02 (NOT STARTED):** Decide and document whether true push reminders are in-scope for final; if out-of-scope, keep backlog item deferred.
 - **I-05 (NOT STARTED):** Role onboarding UX is explicit and consistent for student/organizer/staff.
 - **I-06 (PARTIAL):** Society directory and society-scoped event browsing work end-to-end once `societies` is seeded; surface society on shared student event cards/details as a follow-up polish item.
+- **I-08 (PARTIAL):** Organizer bottom navigation is usable end-to-end (Home / My Events / Profile) without blocking organizer workflows that previously lived on the single dashboard activity.
 - **I-07 (NOT STARTED):** Chatbot is either implemented as MVP or explicitly deferred with rationale in final backlog.
