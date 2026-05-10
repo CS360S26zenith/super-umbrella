@@ -29,9 +29,13 @@
             android:name=".view.RegisterActivity"
             android:exported="false" />
 
-        <!-- Student: Event List -->
+        <!-- Student: Event List (legacy → StudentMainActivity) -->
         <activity
             android:name=".view.EventListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".view.StudentMainActivity"
             android:exported="false" />
 
         <!-- Student: Event Detail -->

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_student_home"
+        android:icon="@drawable/ic_nav_home"
+        android:title="@string/nav_student_home" />
+    <item
+        android:id="@+id/nav_student_explore"
+        android:icon="@drawable/ic_student_search"
+        android:title="@string/nav_student_explore" />
+    <item
+        android:id="@+id/nav_student_tickets"
+        android:icon="@drawable/ic_student_ticket"
+        android:title="@string/nav_student_tickets" />
+    <item
+        android:id="@+id/nav_student_profile"
+        android:icon="@drawable/ic_nav_person"
+        android:title="@string/nav_student_profile" />
+</menu>

@@ -24,4 +24,42 @@
     <string name="nav_create_event_short">Create Event</string>
     <string name="notifications">Notifications</string>
     <string name="event_created_live">Event published as Live.</string>
+
+    <!-- Student shell -->
+    <string name="nav_student_home">Home</string>
+    <string name="nav_student_explore">Explore</string>
+    <string name="nav_student_tickets">Tickets</string>
+    <string name="nav_student_profile">Profile</string>
+    <string name="explore_screen_title">Explore &amp; Discover</string>
+    <string name="home_subtitle">What\'s happening on campus?</string>
+    <string name="stat_this_week">Next 7 days</string>
+    <string name="stat_registered">Registered</string>
+    <string name="stat_saved_societies">Societies</string>
+    <string name="quick_search">Search</string>
+    <string name="quick_trending">Trending</string>
+    <string name="quick_calendar">Calendar</string>
+    <string name="upcoming_events_section">Upcoming events</string>
+    <string name="see_all_explore">See all →</string>
+    <string name="no_upcoming_events_home">No upcoming live events. Check Explore for the full list.</string>
+    <string name="home_no_events_trending">No upcoming events to rank yet.</string>
+    <string name="home_trending_applied">Trending: %1$d upcoming pick(s)</string>
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_plain">%1$s 👋</string>
+    <string name="greeting_named">%1$s, %2$s 👋</string>
+    <string name="tickets_subtitle">Events you\'ve RSVP\'d — open your QR at the door.</string>
+    <string name="no_rsvp_tickets">No tickets yet. RSVP from Explore, then come back here.</string>
+    <string name="view_ticket">View ticket</string>
+    <string name="student_role_label">Student</string>
+    <string name="profile_attended">Attended</string>
+    <string name="profile_this_month">This month</string>
+    <string name="profile_following">Following</string>
+    <string name="profile_attendance_history">Attendance history</string>
+    <string name="profile_my_societies">My societies</string>
+    <string name="profile_qr_checkin">QR check-in</string>
+    <string name="profile_my_payments">My payments</string>
+    <string name="privacy_settings">Privacy settings</string>
+    <string name="payments_placeholder">Payments are not configured for this demo build.</string>
+    <string name="privacy_placeholder">Privacy controls coming soon.</string>
 </resources>
