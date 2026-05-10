@@ -23,4 +23,5 @@
     <string name="this_month_label">This month</string>
     <string name="nav_create_event_short">Create Event</string>
     <string name="notifications">Notifications</string>
+    <string name="event_created_live">Event published as Live.</string>
 </resources>

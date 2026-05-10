@@ -170,10 +170,11 @@ public class EditEventActivity extends AppCompatActivity {
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         EditEventActivity.this,
-                        android.R.layout.simple_spinner_item,
+                        R.layout.item_society_spinner_selected,
+                        R.id.society_spinner_item_text,
                         labels
                 );
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                adapter.setDropDownViewResource(R.layout.item_society_spinner_dropdown);
                 societySpinner.setAdapter(adapter);
                 loadEventData();
             }

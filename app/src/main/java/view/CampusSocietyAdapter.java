@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.campuseventstest.R;
 import com.example.campuseventstest.model.Society;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -102,16 +102,17 @@ public class CampusSocietyAdapter extends RecyclerView.Adapter<CampusSocietyAdap
         holder.iconFrame.setBackground(circle);
 
         boolean following = s.getId() != null && followedIds.contains(s.getId());
-        holder.followButton.setText(following
+        MaterialButton fb = holder.followButton;
+        fb.setText(following
                 ? context.getString(R.string.following)
                 : context.getString(R.string.follow));
-        holder.followButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                following ? 0xFFFFF3E0 : 0xFF1976D2));
-        holder.followButton.setTextColor(following ? 0xFF5D4037 : 0xFFFFFFFF);
+        fb.setStrokeWidth(0);
+        fb.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                following ? 0xFFFFF3E0 : 0xFF673AB7));
+        fb.setTextColor(following ? 0xFF5D4037 : 0xFFFFFFFF);
 
-        holder.itemView.setOnClickListener(v -> listener.onOpenSociety(s));
-        holder.followButton.setOnClickListener(v ->
-                listener.onToggleFollow(s, following));
+        holder.cardRoot.setOnClickListener(v -> listener.onOpenSociety(s));
+        fb.setOnClickListener(v -> listener.onToggleFollow(s, following));
     }
 
     @Override
@@ -120,13 +121,15 @@ public class CampusSocietyAdapter extends RecyclerView.Adapter<CampusSocietyAdap
     }
 
     static class Holder extends RecyclerView.ViewHolder {
+        final View cardRoot;
         final FrameLayout iconFrame;
         final TextView nameText;
         final TextView acronymText;
-        final Button followButton;
+        final MaterialButton followButton;
 
         Holder(@NonNull View itemView) {
             super(itemView);
+            cardRoot = itemView;
             iconFrame = itemView.findViewById(R.id.society_icon_frame);
             nameText = itemView.findViewById(R.id.society_name_text);
             acronymText = itemView.findViewById(R.id.society_acronym_text);

@@ -153,10 +153,11 @@ public class CreateEventActivity extends AppCompatActivity {
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         CreateEventActivity.this,
-                        android.R.layout.simple_spinner_item,
+                        R.layout.item_society_spinner_selected,
+                        R.id.society_spinner_item_text,
                         labels
                 );
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                adapter.setDropDownViewResource(R.layout.item_society_spinner_dropdown);
                 societySpinner.setAdapter(adapter);
                 if (societyDirectory.isEmpty()) {
                     Toast.makeText(CreateEventActivity.this,
@@ -298,8 +299,8 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates a new event in Firestore using the 7-param constructor.
-     * The event is created with status "live" and rsvpCount 0.
+     * Creates a new event in Firestore. Status is set to {@link Constants#STATUS_LIVE}
+     * (published immediately; staff approval flow not enforced here).
      */
     private void createEvent() {
         String title = titleInput.getText().toString().trim();
@@ -321,12 +322,12 @@ public class CreateEventActivity extends AppCompatActivity {
         loadingBar.setVisibility(View.VISIBLE);
         submitButton.setEnabled(false);
 
-        firestoreService.createEvent(event, true, new FirestoreService.SimpleCallback() {
+        firestoreService.createEvent(event, false, new FirestoreService.SimpleCallback() {
             @Override
             public void onSuccess() {
                 loadingBar.setVisibility(View.GONE);
                 Toast.makeText(CreateEventActivity.this,
-                        "Event submitted for staff approval.",
+                        R.string.event_created_live,
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
