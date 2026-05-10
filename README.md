@@ -46,6 +46,17 @@ This application serves as a centralized platform for university campus events, 
 - **US-24: Firebase Auth** - Secure email/password authentication
 - **US-25: Role-Based Routing** - Automatic navigation based on user role
 
+### Category B — Bonus / end-of-build enhancements
+
+Tracked for grading when features land **outside** the originally completed baseline user stories (see `USER_STORY_BACKLOG_PART4.md`, section **Category B**).
+
+- **B-01:** Campus-Inator-style student Home (notification bar, stats, My Payments placeholder, upcoming feed).
+- **B-02:** Explore screen refresh — search, category chips, date/price/sort filters, richer list rows.
+- **B-03:** Optional `ticketPricePkr` on events for PKR-based price filtering when data provides it.
+- **B-04:** RSVP **attendance history** screen (`StudentEventHistoryActivity`).
+- **B-05:** **Followed societies** screen with drill-down to society timelines (`StudentFollowedSocietiesActivity`).
+- **B-06:** Student Profile quick rows (icons + working links for history, societies, QR shortcut, payments placeholder).
+
 ---
 
 ## 🏗️ Technical Architecture

@@ -115,6 +115,14 @@ public class FirestoreService {
     }
 
     /**
+     * Callback for operations that return a list of societies.
+     */
+    public interface SocietyListCallback {
+        void onSuccess(List<Society> societies);
+        void onFailure(String error);
+    }
+
+    /**
      * Callback for loading persisted in-app notifications for the signed-in user.
      */
     public interface NotificationListCallback {

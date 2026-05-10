@@ -340,6 +340,21 @@ Scope examples:
 
 ---
 
+## Category B — Bonus / end-of-build enhancements
+
+Use this section for work added **after** the originally completed user stories, to track grading-related “bonus” scope (UX polish, optional fields, and extra screens that were not part of the baseline Part 3/Part 4 story definitions).
+
+| ID | Enhancement | Notes |
+|----|-------------|--------|
+| B-01 | **Campus-Inator student landing (Home)** | Teal-style hero, top notification bell, stats (This week / Registered / Saved), **My Payments** entry (UI placeholder), quick tiles, upcoming-only feed with dedicated row layout. |
+| B-02 | **Explore redesign** | Search Events header, category chips (All / Academic / Sports / Cultural mapped to existing categories), date range + PKR price presets + sort dialogs, result count, availability badges on cards. |
+| B-03 | **Optional `ticketPricePkr` on events** | Supports realistic price filtering when populated; falls back when absent. |
+| B-04 | **Attendance history screen** | `StudentEventHistoryActivity` — detailed RSVP history with tap-through to event detail. |
+| B-05 | **Followed societies hub** | `StudentFollowedSocietiesActivity` — lists followed societies and opens `SocietyEventsActivity` for current/past events per society. |
+| B-06 | **Profile quick-access polish** | Icon tiles on rows; navigation wired to history and followed societies; payments remains placeholder toast aligned with Home. |
+
+---
+
 ## Final Notes
 
 - Part 3 stories remain documented in `USER_STORY_BACKLOG.md`.

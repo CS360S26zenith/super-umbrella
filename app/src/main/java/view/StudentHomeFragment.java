@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.campuseventstest.R;
 import com.example.campuseventstest.model.Event;
 import com.example.campuseventstest.model.User;
+import com.example.campuseventstest.service.AuthService;
 import com.example.campuseventstest.service.FirestoreService;
 import com.example.campuseventstest.service.RecommendationService;
 import com.example.campuseventstest.utils.Constants;
@@ -35,7 +35,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Student Home tab — greeting, lightweight stats, shortcuts, upcoming feed.
+ * Student Home tab — landing UI, notifications, upcoming feed, shortcuts.
  */
 public class StudentHomeFragment extends Fragment {
 
@@ -46,10 +46,11 @@ public class StudentHomeFragment extends Fragment {
     private ProgressBar loadingBar;
     private TextView emptyHomeView;
     private RecyclerView recyclerView;
-    private EventAdapter adapter;
+    private HomeUpcomingAdapter adapter;
 
     private FirestoreService firestoreService;
     private RecommendationService recommendationService;
+    private AuthService authService;
 
     private boolean loadedUserStats;
     private boolean loadedRsvpStats;
@@ -71,6 +72,7 @@ public class StudentHomeFragment extends Fragment {
 
         firestoreService = new FirestoreService();
         recommendationService = new RecommendationService();
+        authService = new AuthService();
 
         greetingView = view.findViewById(R.id.home_greeting);
         statWeekView = view.findViewById(R.id.stat_week_val);
@@ -80,19 +82,38 @@ public class StudentHomeFragment extends Fragment {
         emptyHomeView = view.findViewById(R.id.empty_home_events);
         recyclerView = view.findViewById(R.id.upcoming_recycler);
 
-        adapter = new EventAdapter(requireContext(), new ArrayList<>());
+        adapter = new HomeUpcomingAdapter(requireContext(), new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
 
-        view.findViewById(R.id.btn_home_search).setOnClickListener(v -> openExploreTab());
-        view.findViewById(R.id.btn_home_trending).setOnClickListener(v -> applyTrendingToHome());
-        view.findViewById(R.id.btn_home_calendar).setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), MyCalendarActivity.class)));
+        view.findViewById(R.id.home_notif_button).setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), NotificationsActivity.class)));
+
+        view.findViewById(R.id.home_sign_out_button).setOnClickListener(v -> {
+            authService.logout();
+            Intent i = new Intent(requireContext(), LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+            requireActivity().finish();
+        });
+
+        view.findViewById(R.id.card_my_payments).setOnClickListener(v ->
+                Toast.makeText(requireContext(), R.string.my_payments_coming_soon, Toast.LENGTH_SHORT).show());
+
+        view.findViewById(R.id.quick_search_card).setOnClickListener(v -> openExploreTab());
+        view.findViewById(R.id.quick_trending_card).setOnClickListener(v -> applyTrendingToHome());
+        view.findViewById(R.id.quick_profile_card).setOnClickListener(v -> openProfileTab());
         view.findViewById(R.id.btn_explore_all).setOnClickListener(v -> openExploreTab());
 
         setGreetingFromTime();
         loadFollowedCountAndRsvps();
         loadLiveEventsForHome();
+    }
+
+    private void openProfileTab() {
+        if (getActivity() instanceof StudentMainActivity) {
+            ((StudentMainActivity) requireActivity()).selectNav(R.id.nav_student_profile);
+        }
     }
 
     private void setGreetingFromTime() {
@@ -123,13 +144,16 @@ public class StudentHomeFragment extends Fragment {
         if (user == null) {
             return;
         }
+        loadedUserStats = false;
+        loadedRsvpStats = false;
+
         FirebaseFirestore.getInstance()
                 .collection(Constants.COLLECTION_USERS)
                 .document(user.getUid())
                 .get()
                 .addOnSuccessListener(doc -> {
-                    User u = doc.toObject(User.class);
-                    followedSocietyCount = u != null ? u.getFollowedSocietyIds().size() : 0;
+                    User usr = doc.toObject(User.class);
+                    followedSocietyCount = usr != null ? usr.getFollowedSocietyIds().size() : 0;
                     loadedUserStats = true;
                     refreshStatTiles();
                 })
@@ -191,7 +215,7 @@ public class StudentHomeFragment extends Fragment {
                 loadingBar.setVisibility(View.GONE);
                 allLiveEvents = events != null ? events : new ArrayList<>();
                 List<Event> upcoming = filterUpcomingSorted(allLiveEvents);
-                adapter.updateEvents(upcoming);
+                adapter.setEvents(upcoming);
                 emptyHomeView.setVisibility(upcoming.isEmpty() ? View.VISIBLE : View.GONE);
             }
 
@@ -258,7 +282,7 @@ public class StudentHomeFragment extends Fragment {
 
     private void rankAndShow(List<Event> pool, List<String> preferredCategories) {
         List<Event> ranked = recommendationService.rankEvents(pool, preferredCategories);
-        adapter.updateEvents(ranked);
+        adapter.setEvents(ranked);
         emptyHomeView.setVisibility(ranked.isEmpty() ? View.VISIBLE : View.GONE);
         Toast.makeText(requireContext(),
                 getString(R.string.home_trending_applied, ranked.size()),
@@ -287,6 +311,7 @@ public class StudentHomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setGreetingFromTime();
         loadFollowedCountAndRsvps();
         loadLiveEventsForHome();
     }

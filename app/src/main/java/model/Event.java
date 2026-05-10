@@ -25,6 +25,8 @@ public class Event {
     private String societyId;
     /** Denormalized society display name for cards (optional). */
     private String societyName;
+    /** Optional ticket price in PKR for student Explore filters (defaults treated as free). */
+    private Double ticketPricePkr;
 
     /**
      * Required empty constructor for Firestore deserialization.
@@ -336,5 +338,21 @@ public class Event {
 
     public void setSocietyName(String societyName) {
         this.societyName = societyName;
+    }
+
+    public Double getTicketPricePkr() {
+        return ticketPricePkr;
+    }
+
+    public void setTicketPricePkr(Double ticketPricePkr) {
+        this.ticketPricePkr = ticketPricePkr;
+    }
+
+    /** Effective price for filtering (null or negative → free). */
+    public double getEffectiveTicketPricePkr() {
+        if (ticketPricePkr == null || ticketPricePkr < 0) {
+            return 0;
+        }
+        return ticketPricePkr;
     }
 }

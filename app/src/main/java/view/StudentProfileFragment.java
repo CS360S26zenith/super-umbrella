@@ -70,10 +70,10 @@ public class StudentProfileFragment extends Fragment {
                 startActivity(new Intent(requireContext(), NotificationsActivity.class)));
 
         view.findViewById(R.id.row_attendance_history).setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), MyCalendarActivity.class)));
+                startActivity(new Intent(requireContext(), StudentEventHistoryActivity.class)));
 
         view.findViewById(R.id.row_my_societies).setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), SocietiesListActivity.class)));
+                startActivity(new Intent(requireContext(), StudentFollowedSocietiesActivity.class)));
 
         view.findViewById(R.id.row_qr_checkin).setOnClickListener(v -> {
             if (getActivity() instanceof StudentMainActivity) {
@@ -82,7 +82,7 @@ public class StudentProfileFragment extends Fragment {
         });
 
         view.findViewById(R.id.row_my_payments).setOnClickListener(v ->
-                Toast.makeText(requireContext(), R.string.payments_placeholder, Toast.LENGTH_SHORT).show());
+                Toast.makeText(requireContext(), R.string.my_payments_coming_soon, Toast.LENGTH_SHORT).show());
 
         view.findViewById(R.id.student_privacy_button).setOnClickListener(v ->
                 Toast.makeText(requireContext(), R.string.privacy_placeholder, Toast.LENGTH_SHORT).show());

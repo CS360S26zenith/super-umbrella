@@ -91,6 +91,14 @@
             android:name=".view.HelpAssistantActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".view.StudentEventHistoryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".view.StudentFollowedSocietiesActivity"
+            android:exported="false" />
+
         <service
             android:name=".service.CampusMessagingService"
             android:exported="false">

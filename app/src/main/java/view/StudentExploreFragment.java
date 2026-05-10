@@ -1,5 +1,6 @@
 package com.example.campuseventstest.view;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,54 +25,74 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.campuseventstest.R;
 import com.example.campuseventstest.model.Event;
 import com.example.campuseventstest.service.FirestoreService;
-import com.example.campuseventstest.service.RecommendationService;
-import com.google.android.material.chip.Chip;
+import com.example.campuseventstest.utils.Constants;
 import com.google.android.material.chip.ChipGroup;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * Explore tab — browse/search/filter events (same behavior as legacy Event List screen).
+ * Explore — search, category buckets, date/price/sort filters, rich event cards.
  */
 public class StudentExploreFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private EventAdapter eventAdapter;
+    private enum Bucket {
+        ALL,
+        ACADEMIC,
+        SPORTS,
+        CULTURAL
+    }
+
+    private enum SortMode {
+        DATE_ASC,
+        DATE_DESC,
+        TITLE_ASC
+    }
+
     private EditText searchBar;
     private ChipGroup categoryChips;
+    private View filterDateRow;
+    private View filterPriceRow;
+    private View filterSortRow;
+    private TextView filterDateValue;
+    private TextView filterPriceValue;
+    private TextView filterSortValue;
+    private TextView resultsCountView;
+    private TextView emptyText;
     private ProgressBar loadingBar;
-    private TextView emptyStateText;
-    private View recommendationsButton;
-    private View myCalendarButton;
-    private View notificationsInboxButton;
-    private View helpAssistantButton;
-    private View campusSocietiesButton;
+    private RecyclerView recyclerView;
+    private ExploreEventAdapter adapter;
 
     private FirestoreService firestoreService;
-    private RecommendationService recommendationService;
-    private List<Event> allEvents;
-    private String currentCategory = "";
-    private String currentSearchQuery = "";
-    private boolean skipNextResumeReload = true;
-    private long lastEventsLoadElapsedMs = 0L;
-    private static final long MIN_RESUME_RELOAD_INTERVAL_MS = 2500L;
+    private List<Event> allLiveEvents = new ArrayList<>();
+
+    private Bucket bucket = Bucket.ALL;
+    private String searchQuery = "";
+    private Calendar filterStartDay;
+    private Calendar filterEndDay;
+    private int priceMinPkr = 0;
+    private int priceMaxPkr = 500_000;
+    private SortMode sortMode = SortMode.DATE_DESC;
+
+    private final Handler debounceHandler = new Handler(Looper.getMainLooper());
+    private Runnable debounceRunnable;
     private static final long SEARCH_DEBOUNCE_MS = 200L;
-    private final Handler searchHandler = new Handler(Looper.getMainLooper());
-    private Runnable searchDebounceRunnable;
-    private boolean eventsLoadInFlight;
-    private View rootView;
+
+    private long lastLoadElapsed;
+    private static final long MIN_RELOAD_MS = 2000L;
+    private boolean loadInFlight;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_student_explore, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_student_explore, container, false);
     }
 
     @Override
@@ -78,47 +100,41 @@ public class StudentExploreFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         firestoreService = new FirestoreService();
-        recommendationService = new RecommendationService();
-        allEvents = new ArrayList<>();
 
-        recyclerView = view.findViewById(R.id.events_recycler_view);
-        searchBar = view.findViewById(R.id.search_bar);
-        categoryChips = view.findViewById(R.id.category_chips);
-        loadingBar = view.findViewById(R.id.loading_bar);
-        emptyStateText = view.findViewById(R.id.empty_state_text);
-        recommendationsButton = view.findViewById(R.id.recommendations_button);
-        myCalendarButton = view.findViewById(R.id.my_calendar_button);
-        notificationsInboxButton = view.findViewById(R.id.notifications_inbox_button);
-        helpAssistantButton = view.findViewById(R.id.help_assistant_button);
-        campusSocietiesButton = view.findViewById(R.id.campus_societies_button);
+        searchBar = view.findViewById(R.id.explore_search_bar);
+        categoryChips = view.findViewById(R.id.explore_category_chips);
+        filterDateRow = view.findViewById(R.id.filter_date_row);
+        filterPriceRow = view.findViewById(R.id.filter_price_row);
+        filterSortRow = view.findViewById(R.id.filter_sort_row);
+        filterDateValue = view.findViewById(R.id.filter_date_value);
+        filterPriceValue = view.findViewById(R.id.filter_price_value);
+        filterSortValue = view.findViewById(R.id.filter_sort_value);
+        resultsCountView = view.findViewById(R.id.explore_results_count);
+        emptyText = view.findViewById(R.id.explore_empty_text);
+        loadingBar = view.findViewById(R.id.explore_loading_bar);
+        recyclerView = view.findViewById(R.id.explore_recycler);
 
-        setupRecyclerView();
-        setupSearchBar();
-        setupCategoryFilters();
-        bindShortcuts();
-
-        loadEvents();
-    }
-
-    private void bindShortcuts() {
-        recommendationsButton.setOnClickListener(v -> showRecommendations());
-        myCalendarButton.setOnClickListener(v ->
-                startActivity(new android.content.Intent(requireContext(), MyCalendarActivity.class)));
-        notificationsInboxButton.setOnClickListener(v ->
-                startActivity(new android.content.Intent(requireContext(), NotificationsActivity.class)));
-        helpAssistantButton.setOnClickListener(v ->
-                startActivity(new android.content.Intent(requireContext(), HelpAssistantActivity.class)));
-        campusSocietiesButton.setOnClickListener(v ->
-                startActivity(new android.content.Intent(requireContext(), SocietiesListActivity.class)));
-    }
-
-    private void setupRecyclerView() {
-        eventAdapter = new EventAdapter(requireContext(), allEvents);
+        adapter = new ExploreEventAdapter(requireContext(), new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(eventAdapter);
-    }
+        recyclerView.setAdapter(adapter);
 
-    private void setupSearchBar() {
+        categoryChips.setOnCheckedStateChangeListener((group, ids) -> {
+            if (ids.isEmpty()) {
+                return;
+            }
+            int id = ids.get(0);
+            if (id == R.id.chip_explore_all) {
+                bucket = Bucket.ALL;
+            } else if (id == R.id.chip_explore_academic) {
+                bucket = Bucket.ACADEMIC;
+            } else if (id == R.id.chip_explore_sports) {
+                bucket = Bucket.SPORTS;
+            } else if (id == R.id.chip_explore_cultural) {
+                bucket = Bucket.CULTURAL;
+            }
+            applyFiltersAndRender();
+        });
+
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -126,198 +142,325 @@ public class StudentExploreFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                currentSearchQuery = s.toString();
-                if (searchDebounceRunnable != null) {
-                    searchHandler.removeCallbacks(searchDebounceRunnable);
+                searchQuery = s != null ? s.toString() : "";
+                if (debounceRunnable != null) {
+                    debounceHandler.removeCallbacks(debounceRunnable);
                 }
-                searchDebounceRunnable = StudentExploreFragment.this::applyFilters;
-                searchHandler.postDelayed(searchDebounceRunnable, SEARCH_DEBOUNCE_MS);
+                debounceRunnable = StudentExploreFragment.this::applyFiltersAndRender;
+                debounceHandler.postDelayed(debounceRunnable, SEARCH_DEBOUNCE_MS);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-    }
 
-    private void setupCategoryFilters() {
-        categoryChips.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty()) {
-                currentCategory = "";
-            } else {
-                int checkedId = checkedIds.get(0);
-                Chip selectedChip = rootView.findViewById(checkedId);
-                if (selectedChip != null) {
-                    String chipText = selectedChip.getText().toString();
-                    if ("All".equalsIgnoreCase(chipText)) {
-                        currentCategory = "";
-                    } else {
-                        currentCategory = chipText;
-                    }
-                }
-            }
-            applyFilters();
-        });
+        filterDateRow.setOnClickListener(v -> showDateRangeDialog());
+        filterPriceRow.setOnClickListener(v -> showPriceRangeDialog());
+        filterSortRow.setOnClickListener(v -> showSortDialog());
+
+        view.findViewById(R.id.link_societies).setOnClickListener(v ->
+                startActivity(new android.content.Intent(requireContext(), SocietiesListActivity.class)));
+        view.findViewById(R.id.link_calendar).setOnClickListener(v ->
+                startActivity(new android.content.Intent(requireContext(), MyCalendarActivity.class)));
+        view.findViewById(R.id.link_notifications).setOnClickListener(v ->
+                startActivity(new android.content.Intent(requireContext(), NotificationsActivity.class)));
+        view.findViewById(R.id.link_help).setOnClickListener(v ->
+                startActivity(new android.content.Intent(requireContext(), HelpAssistantActivity.class)));
+
+        refreshFilterLabels();
+        loadEvents();
     }
 
     private void loadEvents() {
-        if (eventsLoadInFlight) {
+        if (loadInFlight) {
             return;
         }
-        eventsLoadInFlight = true;
+        loadInFlight = true;
         loadingBar.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
-        emptyStateText.setVisibility(View.GONE);
+        emptyText.setVisibility(View.GONE);
 
         firestoreService.getLiveEvents(new FirestoreService.EventListCallback() {
             @Override
             public void onSuccess(List<Event> events) {
-                eventsLoadInFlight = false;
+                loadInFlight = false;
                 loadingBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                lastEventsLoadElapsedMs = SystemClock.elapsedRealtime();
-                allEvents = events;
-                eventAdapter.updateEvents(events);
-                applyFilters();
+                lastLoadElapsed = SystemClock.elapsedRealtime();
+                allLiveEvents = events != null ? events : new ArrayList<>();
+                applyFiltersAndRender();
             }
 
             @Override
             public void onFailure(String error) {
-                eventsLoadInFlight = false;
+                loadInFlight = false;
                 loadingBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                emptyStateText.setVisibility(View.GONE);
-                Toast.makeText(requireContext(),
-                        "Failed to load events: " + error,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private List<Event> buildFilteredEventList() {
-        List<Event> filteredEvents = new ArrayList<>(allEvents);
-
-        if (!currentCategory.isEmpty()) {
-            List<Event> categoryFiltered = new ArrayList<>();
-            for (Event event : filteredEvents) {
-                if (event.getCategory() != null
-                        && event.getCategory().equalsIgnoreCase(currentCategory)) {
-                    categoryFiltered.add(event);
-                }
-            }
-            filteredEvents = categoryFiltered;
+    private boolean passesBucket(Event e) {
+        String cat = e.getCategory();
+        switch (bucket) {
+            case ALL:
+                return true;
+            case ACADEMIC:
+                return Constants.CATEGORY_TALKS.equalsIgnoreCase(cat);
+            case SPORTS:
+                return Constants.CATEGORY_SPORTS.equalsIgnoreCase(cat);
+            case CULTURAL:
+                return Constants.CATEGORY_CLUBS.equalsIgnoreCase(cat)
+                        || Constants.CATEGORY_PERFORMANCES.equalsIgnoreCase(cat);
+            default:
+                return true;
         }
-
-        if (!currentSearchQuery.isEmpty()) {
-            List<Event> searchFiltered = new ArrayList<>();
-            String lowerQuery = currentSearchQuery.toLowerCase();
-            for (Event event : filteredEvents) {
-                boolean matchesTitle = event.getTitle() != null
-                        && event.getTitle().toLowerCase().contains(lowerQuery);
-                boolean matchesDesc = event.getDescription() != null
-                        && event.getDescription().toLowerCase().contains(lowerQuery);
-                boolean matchesVenue = event.getVenue() != null
-                        && event.getVenue().toLowerCase().contains(lowerQuery);
-
-                if (matchesTitle || matchesDesc || matchesVenue) {
-                    searchFiltered.add(event);
-                }
-            }
-            filteredEvents = searchFiltered;
-        }
-
-        return filteredEvents;
     }
 
-    private void applyFilters() {
-        List<Event> filteredEvents = buildFilteredEventList();
-        eventAdapter.updateEvents(filteredEvents);
-        emptyStateText.setVisibility(filteredEvents.isEmpty() ? View.VISIBLE : View.GONE);
+    private boolean passesSearch(Event e) {
+        if (searchQuery.trim().isEmpty()) {
+            return true;
+        }
+        String q = searchQuery.toLowerCase(Locale.US);
+        return (e.getTitle() != null && e.getTitle().toLowerCase(Locale.US).contains(q))
+                || (e.getDescription() != null && e.getDescription().toLowerCase(Locale.US).contains(q))
+                || (e.getVenue() != null && e.getVenue().toLowerCase(Locale.US).contains(q))
+                || (e.getSocietyName() != null && e.getSocietyName().toLowerCase(Locale.US).contains(q));
     }
 
-    private void showRecommendations() {
-        if (searchDebounceRunnable != null) {
-            searchHandler.removeCallbacks(searchDebounceRunnable);
-            searchDebounceRunnable = null;
+    private boolean passesDate(Event e) {
+        if (filterStartDay == null && filterEndDay == null) {
+            return true;
         }
-
-        List<Event> pool = buildFilteredEventList();
-        if (pool.isEmpty()) {
-            Toast.makeText(requireContext(),
-                    allEvents.isEmpty()
-                            ? "Events are still loading or none are live yet."
-                            : "No events match your search or category filters.",
-                    Toast.LENGTH_LONG).show();
-            return;
+        if (e.getDate() == null) {
+            return false;
         }
+        long t = e.getDate().toDate().getTime();
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(t);
+        stripTime(c);
+        long eventDay = c.getTimeInMillis();
 
-        if (!currentCategory.isEmpty()) {
-            applyRankedRecommendations(pool, Collections.singletonList(currentCategory));
-            return;
+        if (filterStartDay != null && filterEndDay != null) {
+            long start = filterStartDay.getTimeInMillis();
+            long end = endOfDay(filterEndDay);
+            return eventDay >= start && t <= end;
         }
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) {
-            applyRankedRecommendations(pool, new ArrayList<>());
-            return;
+        if (filterStartDay != null) {
+            return eventDay >= filterStartDay.getTimeInMillis();
         }
-
-        firestoreService.getRsvpedEventsByStudent(user.getUid(), new FirestoreService.EventListCallback() {
-            @Override
-            public void onSuccess(List<Event> pastRsvped) {
-                applyRankedRecommendations(pool, categoriesFromPastRsvps(pastRsvped));
-            }
-
-            @Override
-            public void onFailure(String error) {
-                applyRankedRecommendations(pool, new ArrayList<>());
-            }
-        });
+        if (filterEndDay != null) {
+            return t <= endOfDay(filterEndDay);
+        }
+        return true;
     }
 
-    private void applyRankedRecommendations(List<Event> pool, List<String> preferredCategories) {
-        List<Event> ranked = recommendationService.rankEvents(pool, preferredCategories);
-        loadingBar.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
-        eventAdapter.updateEvents(ranked);
-        emptyStateText.setVisibility(View.GONE);
-        Toast.makeText(requireContext(),
-                "Trending picks: " + ranked.size() + " event(s)",
-                Toast.LENGTH_SHORT).show();
+    private static long endOfDay(Calendar day) {
+        Calendar c = (Calendar) day.clone();
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+        c.set(Calendar.MILLISECOND, 999);
+        return c.getTimeInMillis();
     }
 
-    private static List<String> categoriesFromPastRsvps(List<Event> pastRsvped) {
-        LinkedHashSet<String> seen = new LinkedHashSet<>();
-        if (pastRsvped != null) {
-            for (Event e : pastRsvped) {
-                if (e.getCategory() != null && !e.getCategory().trim().isEmpty()) {
-                    seen.add(e.getCategory().trim());
-                }
+    private static void stripTime(Calendar c) {
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+    }
+
+    private boolean passesPrice(Event e) {
+        double p = e.getEffectiveTicketPricePkr();
+        return p >= priceMinPkr && p <= priceMaxPkr;
+    }
+
+    private void applyFiltersAndRender() {
+        List<Event> out = new ArrayList<>();
+        for (Event e : allLiveEvents) {
+            if (passesBucket(e) && passesSearch(e) && passesDate(e) && passesPrice(e)) {
+                out.add(e);
             }
         }
-        return new ArrayList<>(seen);
+        sortEvents(out);
+        adapter.setEvents(out);
+        resultsCountView.setText(getString(R.string.explore_results_fmt, out.size()));
+        emptyText.setVisibility(out.isEmpty() ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(out.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
+    private void sortEvents(List<Event> list) {
+        Comparator<Event> cmp;
+        switch (sortMode) {
+            case DATE_DESC:
+                cmp = Comparator.comparing((Event e) ->
+                        e.getDate() != null ? e.getDate().toDate().getTime() : 0L).reversed();
+                break;
+            case TITLE_ASC:
+                cmp = Comparator.comparing(e -> e.getTitle() != null ? e.getTitle().toLowerCase(Locale.US) : "");
+                break;
+            case DATE_ASC:
+            default:
+                cmp = Comparator.comparing((Event e) ->
+                        e.getDate() != null ? e.getDate().toDate().getTime() : Long.MAX_VALUE);
+                break;
+        }
+        Collections.sort(list, cmp);
+    }
+
+    private void refreshFilterLabels() {
+        SimpleDateFormat df = new SimpleDateFormat("MMM d", Locale.getDefault());
+        if (filterStartDay != null && filterEndDay != null) {
+            filterDateValue.setText(df.format(filterStartDay.getTime()) + " – "
+                    + df.format(filterEndDay.getTime()));
+        } else if (filterStartDay != null) {
+            filterDateValue.setText(getString(R.string.filter_from_fmt, df.format(filterStartDay.getTime())));
+        } else if (filterEndDay != null) {
+            filterDateValue.setText(getString(R.string.filter_until_fmt, df.format(filterEndDay.getTime())));
+        } else {
+            filterDateValue.setText(R.string.filter_any_date);
+        }
+
+        if (priceMinPkr <= 0 && priceMaxPkr >= 500_000) {
+            filterPriceValue.setText(R.string.filter_price_any);
+        } else {
+            filterPriceValue.setText(getString(R.string.filter_price_fmt, priceMinPkr, priceMaxPkr));
+        }
+
+        switch (sortMode) {
+            case DATE_DESC:
+                filterSortValue.setText(R.string.sort_latest_date_desc);
+                break;
+            case TITLE_ASC:
+                filterSortValue.setText(R.string.sort_title_az);
+                break;
+            case DATE_ASC:
+            default:
+                filterSortValue.setText(R.string.sort_soonest);
+                break;
+        }
+    }
+
+    private void showDateRangeDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.filter_date_range)
+                .setItems(new CharSequence[]{
+                        getString(R.string.filter_any_date),
+                        getString(R.string.pick_start_date),
+                        getString(R.string.pick_end_date),
+                        getString(R.string.clear_dates)
+                }, (d, which) -> {
+                    if (which == 0) {
+                        filterStartDay = null;
+                        filterEndDay = null;
+                        refreshFilterLabels();
+                        applyFiltersAndRender();
+                    } else if (which == 1) {
+                        pickDate(true);
+                    } else if (which == 2) {
+                        pickDate(false);
+                    } else {
+                        filterStartDay = null;
+                        filterEndDay = null;
+                        refreshFilterLabels();
+                        applyFiltersAndRender();
+                    }
+                })
+                .show();
+    }
+
+    private void pickDate(boolean isStart) {
+        Calendar cal = Calendar.getInstance();
+        DatePickerDialog dlg = new DatePickerDialog(requireContext(),
+                (view, year, month, dayOfMonth) -> {
+                    Calendar c = Calendar.getInstance();
+                    c.set(year, month, dayOfMonth);
+                    stripTime(c);
+                    if (isStart) {
+                        filterStartDay = c;
+                    } else {
+                        filterEndDay = c;
+                    }
+                    refreshFilterLabels();
+                    applyFiltersAndRender();
+                },
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH));
+        dlg.show();
+    }
+
+    private void showPriceRangeDialog() {
+        final String[] options = {
+                getString(R.string.price_preset_any),
+                getString(R.string.price_preset_free),
+                getString(R.string.price_preset_low),
+                getString(R.string.price_preset_mid)
+        };
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.filter_price_range)
+                .setItems(options, (d, which) -> {
+                    switch (which) {
+                        case 0:
+                            priceMinPkr = 0;
+                            priceMaxPkr = 500_000;
+                            break;
+                        case 1:
+                            priceMinPkr = 0;
+                            priceMaxPkr = 0;
+                            break;
+                        case 2:
+                            priceMinPkr = 0;
+                            priceMaxPkr = 500;
+                            break;
+                        case 3:
+                            priceMinPkr = 0;
+                            priceMaxPkr = 5000;
+                            break;
+                        default:
+                            break;
+                    }
+                    refreshFilterLabels();
+                    applyFiltersAndRender();
+                })
+                .show();
+    }
+
+    private void showSortDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.filter_sort)
+                .setItems(new CharSequence[]{
+                        getString(R.string.sort_soonest),
+                        getString(R.string.sort_latest_date_desc),
+                        getString(R.string.sort_title_az)
+                }, (d, which) -> {
+                    if (which == 0) {
+                        sortMode = SortMode.DATE_ASC;
+                    } else if (which == 1) {
+                        sortMode = SortMode.DATE_DESC;
+                    } else {
+                        sortMode = SortMode.TITLE_ASC;
+                    }
+                    refreshFilterLabels();
+                    applyFiltersAndRender();
+                })
+                .show();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (skipNextResumeReload) {
-            skipNextResumeReload = false;
-            return;
-        }
         long now = SystemClock.elapsedRealtime();
-        if (now - lastEventsLoadElapsedMs < MIN_RESUME_RELOAD_INTERVAL_MS) {
-            return;
+        if (now - lastLoadElapsed > MIN_RELOAD_MS && !loadInFlight) {
+            loadEvents();
         }
-        loadEvents();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (searchDebounceRunnable != null) {
-            searchHandler.removeCallbacks(searchDebounceRunnable);
+        if (debounceRunnable != null) {
+            debounceHandler.removeCallbacks(debounceRunnable);
         }
-        rootView = null;
     }
 }
