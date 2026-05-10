@@ -13,6 +13,7 @@ public class Constants {
     public static final String COLLECTION_WAITLIST = "waitlist";
     public static final String COLLECTION_TICKETS = "tickets";
     public static final String COLLECTION_NOTIFICATIONS = "notifications";
+    public static final String COLLECTION_SOCIETIES = "societies";
 
     // User roles
     public static final String ROLE_STUDENT = "student";
@@ -40,6 +41,8 @@ public class Constants {
     public static final String EXTRA_EVENT_ID = "eventId";
     public static final String EXTRA_USER_ROLE = "extra_user_role";
     public static final String EXTRA_EVENT_TITLE = "eventTitle";
+    public static final String EXTRA_SOCIETY_ID = "societyId";
+    public static final String EXTRA_SOCIETY_NAME = "societyName";
 
     private Constants() {
         // Prevent instantiation

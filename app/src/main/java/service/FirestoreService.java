@@ -2,6 +2,7 @@ package com.example.campuseventstest.service;
 
 import com.example.campuseventstest.model.AppNotification;
 import com.example.campuseventstest.model.Event;
+import com.example.campuseventstest.model.Society;
 import com.example.campuseventstest.model.Ticket;
 import com.example.campuseventstest.model.Waitlist;
 import com.example.campuseventstest.utils.Constants;
@@ -13,6 +14,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -214,6 +217,67 @@ public class FirestoreService {
                     }
                     callback.onSuccess(events);
                 })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /**
+     * Loads public society directory entries (document ID becomes {@link Society#setId}).
+     */
+    public void getSocieties(final SocietyListCallback callback) {
+        db.collection(Constants.COLLECTION_SOCIETIES)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Society> list = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : snapshot) {
+                        Society s = doc.toObject(Society.class);
+                        if (s != null) {
+                            s.setId(doc.getId());
+                            list.add(s);
+                        }
+                    }
+                    Collections.sort(list, Comparator.comparing(Society::getName,
+                            Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER)));
+                    callback.onSuccess(list);
+                })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /**
+     * Loads events tagged with {@code societyId}. Caller filters by role (e.g. hide drafts for students).
+     */
+    public void getEventsBySociety(String societyId, final EventListCallback callback) {
+        if (societyId == null || societyId.isEmpty()) {
+            callback.onFailure("Missing society id");
+            return;
+        }
+        db.collection(Constants.COLLECTION_EVENTS)
+                .whereEqualTo("societyId", societyId)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Event> events = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : snapshot) {
+                        Event e = doc.toObject(Event.class);
+                        if (e != null) {
+                            e.setEventId(doc.getId());
+                            events.add(e);
+                        }
+                    }
+                    callback.onSuccess(events);
+                })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /** Adds or removes a society id on the signed-in user's follow list. */
+    public void setFollowingSociety(String userId, String societyId, boolean follow,
+            final SimpleCallback callback) {
+        if (userId == null || societyId == null) {
+            callback.onFailure("Missing user or society id");
+            return;
+        }
+        DocumentReference ref = db.collection(Constants.COLLECTION_USERS).document(userId);
+        Object op = follow ? FieldValue.arrayUnion(societyId) : FieldValue.arrayRemove(societyId);
+        ref.update("followedSocietyIds", op)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 

@@ -169,7 +169,7 @@ As a club leader, I want to export the attendee list for an event so that I can 
 - Export shares attendee list in CSV-like text format.
 
 **Implementation Evidence:**
-- `app/src/main/java/view/OrganizerDashboardActivity.java`
+- `app/src/main/java/view/OrganizerHomeFragment.java` (organizer Home tab)
 - `app/src/main/java/service/FirestoreService.java`
 
 ---
@@ -303,12 +303,18 @@ Scope examples:
 - Improve first-login flow and role validation UX.
 
 ### I-06: Society profiles and event publisher identity
-**Status:** NOT STARTED  
+**Status:** PARTIAL (MVP shipped — directory, follow, society event timeline, organizer tagging)  
 **Source:** Team improvement idea
 
 Scope examples:
 - Add society/club profile pages with details and posted events.
 - Show publisher identity consistently on event cards/details.
+
+**Delivered in-tree (iterative improvement):**
+- `societies` collection + student **Campus Societies** list/search/follow and society **Past / Upcoming** event screens (`SocietiesListActivity`, `SocietyEventsActivity`, `CampusSocietyAdapter`).
+- Events carry `societyId` / `societyName`; create/edit forms require an organizing society when the directory is loaded (`CreateEventActivity`, `EditEventActivity`).
+- Organizer shell with bottom navigation **Home**, **My Events**, **Profile** (`OrganizerMainActivity` + fragments).
+- Seed script: `scripts/seed-societies.js` (`npm run seed:societies`).
 
 ### I-07: In-app assistant/chatbot for event help
 **Status:** NOT STARTED  
@@ -348,5 +354,5 @@ Scope examples:
 - **US-23 (PARTIAL):** Analytics screen shows meaningful, correct metrics loaded from current data.
 - **I-02 (NOT STARTED):** Decide and document whether true push reminders are in-scope for final; if out-of-scope, keep backlog item deferred.
 - **I-05 (NOT STARTED):** Role onboarding UX is explicit and consistent for student/organizer/staff.
-- **I-06 (NOT STARTED):** Society/publisher identity is visible and connected to event listings/details.
+- **I-06 (PARTIAL):** Society directory and society-scoped event browsing work end-to-end once `societies` is seeded; surface society on shared student event cards/details as a follow-up polish item.
 - **I-07 (NOT STARTED):** Chatbot is either implemented as MVP or explicitly deferred with rationale in final backlog.

@@ -39,9 +39,21 @@
             android:name=".view.EventDetailActivity"
             android:exported="false" />
 
-        <!-- Organizer: Dashboard -->
+        <!-- Organizer: Dashboard (legacy alias → OrganizerMainActivity) -->
         <activity
             android:name=".view.OrganizerDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".view.OrganizerMainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".view.SocietiesListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".view.SocietyEventsActivity"
             android:exported="false" />
 
         <!-- Organizer: Create Event -->

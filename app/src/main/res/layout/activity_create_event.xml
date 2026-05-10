@@ -85,6 +85,24 @@
             android:textColorHint="?attr/colorOnSurfaceVariant"
             android:layout_marginBottom="16dp" />
 
+        <!-- Organizing society -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/organizing_society"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_marginBottom="4dp" />
+
+        <Spinner
+            android:id="@+id/society_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:padding="8dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Light" />
+
         <!-- Category Spinner -->
         <TextView
             android:layout_width="wrap_content"

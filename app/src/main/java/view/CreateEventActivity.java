@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.campuseventstest.R;
 import com.example.campuseventstest.model.Event;
+import com.example.campuseventstest.model.Society;
 import com.example.campuseventstest.service.FirestoreService;
 import com.example.campuseventstest.utils.Constants;
 import com.google.firebase.Timestamp;
@@ -22,8 +23,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -39,10 +42,12 @@ public class CreateEventActivity extends AppCompatActivity {
     private EditText capacityInput;
     private Button datePickerButton;
     private Spinner categorySpinner;
+    private Spinner societySpinner;
     private Button submitButton;
     private ProgressBar loadingBar;
 
     private FirestoreService firestoreService;
+    private final List<Society> societyDirectory = new ArrayList<>();
     private Calendar selectedDateTime;
     private SimpleDateFormat dateFormat;
 
@@ -81,7 +86,7 @@ public class CreateEventActivity extends AppCompatActivity {
                         setupCategorySpinner();
                         setupDatePicker();
                         setupSubmitButton();
-                        submitButton.setEnabled(true);
+                        loadSocietyDirectory();
                     } else {
                         loadingBar.setVisibility(View.GONE);
                         Toast.makeText(this, "Organizer access required.", Toast.LENGTH_LONG).show();
@@ -105,6 +110,7 @@ public class CreateEventActivity extends AppCompatActivity {
         venueInput = findViewById(R.id.create_venue_input);
         capacityInput = findViewById(R.id.create_capacity_input);
         datePickerButton = findViewById(R.id.date_picker_button);
+        societySpinner = findViewById(R.id.society_spinner);
         categorySpinner = findViewById(R.id.category_spinner);
         submitButton = findViewById(R.id.submit_event_button);
         loadingBar = findViewById(R.id.create_loading_bar);
@@ -128,6 +134,49 @@ public class CreateEventActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
+    }
+
+    private void loadSocietyDirectory() {
+        loadingBar.setVisibility(View.VISIBLE);
+        submitButton.setEnabled(false);
+        firestoreService.getSocieties(new FirestoreService.SocietyListCallback() {
+            @Override
+            public void onSuccess(List<Society> societies) {
+                loadingBar.setVisibility(View.GONE);
+                societyDirectory.clear();
+                if (societies != null) {
+                    societyDirectory.addAll(societies);
+                }
+                List<String> labels = new ArrayList<>();
+                for (Society s : societyDirectory) {
+                    labels.add(s.getDisplayLabel());
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        CreateEventActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        labels
+                );
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                societySpinner.setAdapter(adapter);
+                if (societyDirectory.isEmpty()) {
+                    Toast.makeText(CreateEventActivity.this,
+                            "No societies found. Seed the societies collection in Firebase first.",
+                            Toast.LENGTH_LONG).show();
+                    submitButton.setEnabled(false);
+                } else {
+                    submitButton.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                loadingBar.setVisibility(View.GONE);
+                Toast.makeText(CreateEventActivity.this,
+                        "Could not load societies: " + error,
+                        Toast.LENGTH_LONG).show();
+                submitButton.setEnabled(false);
+            }
+        });
     }
 
     /**
@@ -221,6 +270,12 @@ public class CreateEventActivity extends AppCompatActivity {
             return false;
         }
 
+        if (societyDirectory.isEmpty() || societySpinner.getSelectedItemPosition() < 0
+                || societySpinner.getSelectedItemPosition() >= societyDirectory.size()) {
+            Toast.makeText(this, R.string.select_society_validation, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         try {
             int capacity = Integer.parseInt(capacityStr);
             if (capacity <= 0) {
@@ -259,6 +314,9 @@ public class CreateEventActivity extends AppCompatActivity {
 
         Event event = new Event(title, description, eventTimestamp, venue,
                 category, capacity, organizerId);
+        Society soc = societyDirectory.get(societySpinner.getSelectedItemPosition());
+        event.setSocietyId(soc.getId());
+        event.setSocietyName(soc.getName());
 
         loadingBar.setVisibility(View.VISIBLE);
         submitButton.setEnabled(false);

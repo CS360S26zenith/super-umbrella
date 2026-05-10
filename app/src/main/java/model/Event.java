@@ -21,6 +21,10 @@ public class Event {
     private int rsvpCount;
     private String organizerId;
     private String status;
+    /** Firestore document ID of hosting society in {@code societies}. */
+    private String societyId;
+    /** Denormalized society display name for cards (optional). */
+    private String societyName;
 
     /**
      * Required empty constructor for Firestore deserialization.
@@ -316,5 +320,21 @@ public class Event {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(String societyId) {
+        this.societyId = societyId;
+    }
+
+    public String getSocietyName() {
+        return societyName;
+    }
+
+    public void setSocietyName(String societyName) {
+        this.societyName = societyName;
     }
 }

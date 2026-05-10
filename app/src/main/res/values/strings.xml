@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">CampusEventsTest</string>
+    <string name="campus_societies_title">Campus Societies</string>
+    <string name="search_societies_hint">Search by name or acronym</string>
+    <string name="follow">+ Follow</string>
+    <string name="following">Following</string>
+    <string name="upcoming_events">Upcoming</string>
+    <string name="past_events">Past</string>
+    <string name="no_events_for_section">No events in this section.</string>
+    <string name="organizing_society">Organizing society</string>
+    <string name="select_society_validation">Please select the organizing society.</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_my_events">My Events</string>
+    <string name="nav_profile">Profile</string>
+    <string name="campus_societies_button">Campus Societies</string>
+    <string name="events_manager_title">Events Manager</string>
+    <string name="my_profile_heading">My Profile</string>
+    <string name="quick_access">Quick Access</string>
+    <string name="events_history">Events History</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="recent_history">Recent history</string>
+    <string name="events_managed_label">Events managed</string>
+    <string name="this_month_label">This month</string>
+    <string name="nav_create_event_short">Create Event</string>
+    <string name="notifications">Notifications</string>
 </resources>

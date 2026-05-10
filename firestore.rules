@@ -96,5 +96,11 @@ service cloud.firestore {
       allow update, delete: if request.auth != null
           && resource.data.userId == request.auth.uid;
     }
+
+    /** Campus societies directory (seed via Firebase Console / Admin SDK). */
+    match /societies/{societyId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
   }
 }

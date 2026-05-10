@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "description": "Bulk seed Firestore events for Campus Events app testing",
   "scripts": {
-    "seed": "node seed-events.js"
+    "seed": "node seed-events.js",
+    "seed:societies": "node seed-societies.js"
   },
   "dependencies": {
     "firebase-admin": "^12.0.0"

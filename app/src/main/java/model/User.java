@@ -1,5 +1,8 @@
 package com.example.campuseventstest.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents a user of the Campus Event Discovery platform.
  * The role field determines whether the user is a student, organizer, or staff member,
@@ -14,6 +17,8 @@ public class User {
     private String organizationName;
     private String organizationBio;
     private String fcmToken;
+    /** Society document IDs the student follows (Campus Societies feature). */
+    private List<String> followedSocietyIds;
 
     /**
      * Required empty constructor for Firestore deserialization.
@@ -148,5 +153,16 @@ public class User {
 
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
+    }
+
+    public List<String> getFollowedSocietyIds() {
+        if (followedSocietyIds == null) {
+            followedSocietyIds = new ArrayList<>();
+        }
+        return followedSocietyIds;
+    }
+
+    public void setFollowedSocietyIds(List<String> followedSocietyIds) {
+        this.followedSocietyIds = followedSocietyIds;
     }
 }

@@ -53,6 +53,7 @@ public class EventListActivity extends AppCompatActivity {
     private View myCalendarButton;
     private View notificationsInboxButton;
     private View helpAssistantButton;
+    private View campusSocietiesButton;
 
     private static final int REQ_POST_NOTIFICATIONS = 9101;
     private FirestoreService firestoreService;
@@ -111,6 +112,7 @@ public class EventListActivity extends AppCompatActivity {
         myCalendarButton = findViewById(R.id.my_calendar_button);
         notificationsInboxButton = findViewById(R.id.notifications_inbox_button);
         helpAssistantButton = findViewById(R.id.help_assistant_button);
+        campusSocietiesButton = findViewById(R.id.campus_societies_button);
         recommendationsButton.setOnClickListener(v -> showRecommendations());
         myCalendarButton.setOnClickListener(v ->
                 startActivity(new Intent(EventListActivity.this, MyCalendarActivity.class)));
@@ -118,6 +120,8 @@ public class EventListActivity extends AppCompatActivity {
                 startActivity(new Intent(EventListActivity.this, NotificationsActivity.class)));
         helpAssistantButton.setOnClickListener(v ->
                 startActivity(new Intent(EventListActivity.this, HelpAssistantActivity.class)));
+        campusSocietiesButton.setOnClickListener(v ->
+                startActivity(new Intent(EventListActivity.this, SocietiesListActivity.class)));
     }
 
     /**

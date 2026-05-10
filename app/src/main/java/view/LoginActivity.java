@@ -20,7 +20,7 @@ import com.example.campuseventstest.utils.Constants;
 /**
  * Login screen — handles user authentication via email/password.
  * Implements US-24 (Firebase Auth) and US-25 (Role-based routing).
- * Routes user to EventListActivity (student) or OrganizerDashboardActivity (organizer).
+ * Routes user to EventListActivity (student) or OrganizerMainActivity (organizer).
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
     private void routeUser(User user) {
         Intent intent;
         if (user.isOrganizer()) {
-            intent = new Intent(this, OrganizerDashboardActivity.class);
+            intent = new Intent(this, OrganizerMainActivity.class);
         } else if (Constants.ROLE_STAFF.equalsIgnoreCase(user.getRole())) {
             intent = new Intent(this, StaffApprovalActivity.class);
         } else {
