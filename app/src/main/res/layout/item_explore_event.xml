@@ -8,8 +8,10 @@
     android:layout_marginBottom="10dp"
     android:clickable="true"
     android:focusable="true"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="@dimen/campus_radius_card_medium"
+    app:cardElevation="1dp"
+    app:strokeColor="@color/campus_card_stroke"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,14 +23,16 @@
         <LinearLayout
             android:layout_width="52dp"
             android:layout_height="wrap_content"
+            android:background="@color/campus_accent_container"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingVertical="8dp">
 
             <TextView
                 android:id="@+id/explore_event_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#0D47A1"
+                android:textColor="@color/campus_accent"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="15" />
@@ -38,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
-                android:textColor="#1565C0"
+                android:textColor="@color/campus_on_surface_secondary"
                 android:textSize="11sp"
                 tools:text="MAR" />
         </LinearLayout>
@@ -54,7 +58,7 @@
                 android:id="@+id/explore_event_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#212121"
+                android:textColor="@color/campus_on_surface"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:text="Tech Fest 2025" />
@@ -64,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="#616161"
+                android:textColor="@color/campus_on_surface_body"
                 android:textSize="13sp"
                 tools:text="📍 HSS Room A8" />
 

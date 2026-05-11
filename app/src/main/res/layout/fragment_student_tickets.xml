@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FAFAFA">
+    android:background="@color/campus_background">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:background="#1565C0"
+        android:background="@color/campus_header_slate"
         android:text="@string/nav_student_tickets"
-        android:textColor="@android:color/white"
+        android:textColor="@color/campus_header_on"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -22,7 +22,7 @@
         android:paddingTop="8dp"
         android:paddingEnd="16dp"
         android:text="@string/tickets_subtitle"
-        android:textColor="#616161"
+        android:textColor="@color/campus_on_surface_body"
         android:textSize="13sp" />
 
     <ProgressBar
@@ -40,7 +40,7 @@
         android:gravity="center"
         android:padding="24dp"
         android:text="@string/no_rsvp_tickets"
-        android:textColor="#757575"
+        android:textColor="@color/campus_on_surface_secondary"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView

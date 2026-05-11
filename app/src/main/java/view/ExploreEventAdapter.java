@@ -2,13 +2,13 @@ package com.example.campuseventstest.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.campuseventstest.R;
@@ -65,20 +65,20 @@ public class ExploreEventAdapter extends RecyclerView.Adapter<ExploreEventAdapte
         int fill = e.getFillPercentage();
         if (e.isFull()) {
             holder.badge.setText(R.string.badge_full);
-            holder.badge.setTextColor(Color.parseColor("#C62828"));
-            holder.badge.setBackgroundColor(Color.parseColor("#FFEBEE"));
+            holder.badge.setTextColor(ContextCompat.getColor(context, R.color.campus_badge_error_text));
+            holder.badge.setBackgroundColor(ContextCompat.getColor(context, R.color.campus_badge_error_bg));
         } else if (fill >= 85) {
             holder.badge.setText(context.getString(R.string.badge_almost_full_fmt, fill));
-            holder.badge.setTextColor(Color.parseColor("#E65100"));
-            holder.badge.setBackgroundColor(Color.parseColor("#FFF3E0"));
+            holder.badge.setTextColor(ContextCompat.getColor(context, R.color.campus_badge_warning_text));
+            holder.badge.setBackgroundColor(ContextCompat.getColor(context, R.color.campus_badge_warning_bg));
         } else if (fill >= 60) {
             holder.badge.setText(context.getString(R.string.badge_percent_fmt, fill));
-            holder.badge.setTextColor(Color.parseColor("#EF6C00"));
-            holder.badge.setBackgroundColor(Color.parseColor("#FFF8E1"));
+            holder.badge.setTextColor(ContextCompat.getColor(context, R.color.campus_badge_caution_text));
+            holder.badge.setBackgroundColor(ContextCompat.getColor(context, R.color.campus_badge_caution_bg));
         } else {
             holder.badge.setText(R.string.badge_available);
-            holder.badge.setTextColor(Color.parseColor("#2E7D32"));
-            holder.badge.setBackgroundColor(Color.parseColor("#E8F5E9"));
+            holder.badge.setTextColor(ContextCompat.getColor(context, R.color.campus_badge_success_text));
+            holder.badge.setBackgroundColor(ContextCompat.getColor(context, R.color.campus_badge_success_bg));
         }
 
         holder.itemView.setOnClickListener(v -> {

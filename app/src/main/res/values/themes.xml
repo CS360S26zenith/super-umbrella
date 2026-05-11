@@ -1,9 +1,19 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+﻿<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Base.Theme.CampusEventsTest" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/campus_primary_light</item>
+        <item name="colorOnPrimary">@color/campus_on_primary_light</item>
+        <item name="colorPrimaryContainer">@color/campus_primary_container_light</item>
+        <item name="colorOnPrimaryContainer">@color/campus_on_primary_container_light</item>
+        <item name="colorSecondary">@color/campus_accent</item>
+        <item name="colorOnSecondary">@color/campus_on_primary</item>
+        <item name="colorSurface">@color/campus_surface</item>
+        <item name="colorOnSurface">@color/campus_on_surface</item>
+        <item name="colorSurfaceVariant">@color/campus_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/campus_on_surface_secondary</item>
+        <item name="android:colorBackground">@color/campus_background</item>
+        <item name="colorOutline">@color/campus_divider_strong</item>
+        <item name="colorError">@color/campus_error</item>
+        <item name="colorOnError">@color/campus_on_primary</item>
     </style>
-
     <style name="Theme.CampusEventsTest" parent="Base.Theme.CampusEventsTest" />
 </resources>

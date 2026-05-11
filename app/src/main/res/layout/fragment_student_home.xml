@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F9F8">
+    android:background="@color/campus_background">
 
     <!-- Top bar: bell, title, sign out -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00897B"
+        android:background="@color/campus_header_slate"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="8dp"
@@ -25,15 +25,16 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notifications"
-            android:src="@drawable/ic_notifications_bell" />
+            android:src="@drawable/ic_notifications_bell"
+            app:tint="@color/campus_header_on" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/app_display_name"
-            android:textColor="@android:color/white"
+            android:text="@string/student_home_header_title"
+            android:textColor="@color/campus_header_on"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -44,7 +45,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/sign_out"
             android:src="@android:drawable/ic_lock_power_off"
-            app:tint="@android:color/white" />
+            app:tint="@color/campus_header_on" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -59,7 +60,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Hero teal block -->
+            <!-- Hero: canvas + slate typography (no large teal fill) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,13 +68,13 @@
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:paddingBottom="16dp"
-                android:background="#00897B">
+                android:background="@color/campus_background">
 
                 <TextView
                     android:id="@+id/home_greeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/campus_on_surface"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     tools:text="Good morning 👋" />
@@ -84,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:text="@string/home_subtitle"
-                    android:textColor="#B2DFDB"
+                    android:textColor="@color/campus_on_surface_secondary"
                     android:textSize="14sp" />
 
                 <LinearLayout
@@ -98,7 +99,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="6dp"
                         android:layout_weight="1"
-                        android:background="#00695C"
+                        android:background="@drawable/bg_surface_bordered"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="10dp">
@@ -120,7 +121,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/campus_accent"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -128,7 +129,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/stat_this_week"
-                                android:textColor="#B2DFDB"
+                                android:textColor="@color/campus_on_surface_secondary"
                                 android:textSize="10sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -138,7 +139,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="6dp"
                         android:layout_weight="1"
-                        android:background="#00695C"
+                        android:background="@drawable/bg_surface_bordered"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="10dp">
@@ -160,7 +161,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/campus_accent"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -168,7 +169,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/stat_registered"
-                                android:textColor="#B2DFDB"
+                                android:textColor="@color/campus_on_surface_secondary"
                                 android:textSize="10sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -177,7 +178,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="#00695C"
+                        android:background="@drawable/bg_surface_bordered"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="10dp">
@@ -199,7 +200,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/campus_accent"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -207,7 +208,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/stat_saved_societies"
-                                android:textColor="#B2DFDB"
+                                android:textColor="@color/campus_on_surface_secondary"
                                 android:textSize="10sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -221,9 +222,11 @@
                     android:layout_marginTop="14dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="#004D40"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="4dp">
+                    app:cardBackgroundColor="@color/campus_surface"
+                    app:cardCornerRadius="@dimen/campus_radius_card_large"
+                    app:cardElevation="1dp"
+                    app:strokeColor="@color/campus_card_stroke"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -249,7 +252,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/profile_my_payments"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/campus_on_surface"
                                 android:textSize="17sp"
                                 android:textStyle="bold" />
 
@@ -258,7 +261,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="@string/my_payments_subtitle"
-                                android:textColor="#B2DFDB"
+                                android:textColor="@color/campus_on_surface_secondary"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -266,7 +269,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="›"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/campus_accent"
                             android:textSize="28sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -286,8 +289,10 @@
                         android:layout_weight="1"
                         android:clickable="true"
                         android:focusable="true"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        app:cardCornerRadius="@dimen/campus_radius_card_medium"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/campus_card_stroke"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -307,7 +312,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="@string/quick_search"
-                                android:textColor="#37474F"
+                                android:textColor="@color/campus_on_surface"
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -320,8 +325,10 @@
                         android:layout_weight="1"
                         android:clickable="true"
                         android:focusable="true"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        app:cardCornerRadius="@dimen/campus_radius_card_medium"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/campus_card_stroke"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -341,7 +348,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="@string/quick_trending"
-                                android:textColor="#37474F"
+                                android:textColor="@color/campus_on_surface"
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -353,8 +360,10 @@
                         android:layout_weight="1"
                         android:clickable="true"
                         android:focusable="true"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        app:cardCornerRadius="@dimen/campus_radius_card_medium"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/campus_card_stroke"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -368,14 +377,14 @@
                                 android:layout_height="28dp"
                                 android:contentDescription="@null"
                                 android:src="@drawable/ic_nav_person"
-                                app:tint="#1565C0" />
+                                app:tint="@color/campus_accent" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="@string/nav_student_profile"
-                                android:textColor="#37474F"
+                                android:textColor="@color/campus_on_surface"
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -397,7 +406,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/upcoming_events_section"
-                    android:textColor="#004D40"
+                    android:textColor="@color/campus_on_surface"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
@@ -408,7 +417,7 @@
                     android:backgroundTint="@android:color/transparent"
                     android:text="@string/see_all_explore"
                     android:textAllCaps="false"
-                    android:textColor="#00796B" />
+                    android:textColor="@color/campus_link" />
             </LinearLayout>
 
             <ProgressBar
@@ -425,7 +434,7 @@
                 android:gravity="center"
                 android:padding="24dp"
                 android:text="@string/no_upcoming_events_home"
-                android:textColor="#546E7A"
+                android:textColor="@color/campus_caption_muted"
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView

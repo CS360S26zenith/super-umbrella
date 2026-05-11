@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ECEFF1"
+    android:background="@color/campus_surface_variant"
     android:fillViewport="true">
 
     <LinearLayout
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp"
-            android:background="#1976D2">
+            android:background="@color/campus_header_slate">
 
             <ImageButton
                 android:id="@+id/profile_notif_button"
@@ -24,7 +24,8 @@
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/notifications"
-                android:src="@drawable/ic_notifications_bell" />
+                android:src="@drawable/ic_notifications_bell"
+                app:tint="@color/campus_header_on" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -32,7 +33,7 @@
                 android:layout_marginTop="-28dp"
                 android:gravity="center_horizontal"
                 android:text="@string/student_role_label"
-                android:textColor="@android:color/white"
+                android:textColor="@color/campus_header_on"
                 android:textSize="15sp" />
 
             <TextView
@@ -41,7 +42,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center_horizontal"
                 android:text="@string/my_profile_heading"
-                android:textColor="@android:color/white"
+                android:textColor="@color/campus_header_on"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -69,14 +70,14 @@
                     android:contentDescription="@null"
                     android:padding="16dp"
                     android:src="@drawable/ic_nav_person"
-                    app:tint="#5E35B1" />
+                    app:tint="@color/campus_accent_purple" />
 
                 <TextView
                     android:id="@+id/student_profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:textColor="#212121"
+                    android:textColor="@color/campus_on_surface"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -85,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="#757575"
+                    android:textColor="@color/campus_on_surface_secondary"
                     android:textSize="14sp" />
 
                 <LinearLayout
@@ -106,7 +107,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="#1565C0"
+                            android:textColor="@color/campus_accent_blue"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
@@ -114,14 +115,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/profile_attended"
-                            android:textColor="#757575"
+                            android:textColor="@color/campus_on_surface_secondary"
                             android:textSize="11sp" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:background="#E0E0E0" />
+                        android:background="@color/campus_divider_strong" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -135,7 +136,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="#1565C0"
+                            android:textColor="@color/campus_accent_blue"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
@@ -143,14 +144,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/profile_this_month"
-                            android:textColor="#757575"
+                            android:textColor="@color/campus_on_surface_secondary"
                             android:textSize="11sp" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:background="#E0E0E0" />
+                        android:background="@color/campus_divider_strong" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -164,7 +165,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="#1565C0"
+                            android:textColor="@color/campus_accent_blue"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
@@ -172,7 +173,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/profile_following"
-                            android:textColor="#757575"
+                            android:textColor="@color/campus_on_surface_secondary"
                             android:textSize="11sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -187,7 +188,7 @@
             android:layout_marginEnd="20dp"
             android:text="@string/quick_access"
             android:textAllCaps="true"
-            android:textColor="#424242"
+            android:textColor="@color/campus_section_label"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -230,14 +231,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/profile_attendance_history"
-                    android:textColor="#212121"
+                    android:textColor="@color/campus_on_surface"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="›"
-                    android:textColor="#9E9E9E"
+                    android:textColor="@color/campus_on_surface_tertiary"
                     android:textSize="20sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -281,14 +282,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/profile_my_societies"
-                    android:textColor="#212121"
+                    android:textColor="@color/campus_on_surface"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="›"
-                    android:textColor="#9E9E9E"
+                    android:textColor="@color/campus_on_surface_tertiary"
                     android:textSize="20sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -332,14 +333,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/profile_qr_checkin"
-                    android:textColor="#212121"
+                    android:textColor="@color/campus_on_surface"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="›"
-                    android:textColor="#9E9E9E"
+                    android:textColor="@color/campus_on_surface_tertiary"
                     android:textSize="20sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -383,14 +384,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/profile_my_payments"
-                    android:textColor="#212121"
+                    android:textColor="@color/campus_on_surface"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="›"
-                    android:textColor="#9E9E9E"
+                    android:textColor="@color/campus_on_surface_tertiary"
                     android:textSize="20sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -405,7 +406,7 @@
             android:layout_marginEnd="16dp"
             android:text="@string/privacy_settings"
             android:textAllCaps="false"
-            android:textColor="#424242" />
+            android:textColor="@color/campus_section_label" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/student_sign_out_button"
@@ -415,8 +416,8 @@
             android:layout_margin="16dp"
             android:text="@string/sign_out"
             android:textAllCaps="false"
-            android:textColor="#D32F2F"
-            app:strokeColor="#D32F2F" />
+            android:textColor="@color/campus_error"
+            app:strokeColor="@color/campus_error" />
 
         <View
             android:layout_width="match_parent"

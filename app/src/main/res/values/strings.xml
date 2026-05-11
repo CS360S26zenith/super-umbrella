@@ -63,8 +63,8 @@
     <string name="payments_placeholder">Payments are not configured for this demo build.</string>
     <string name="privacy_placeholder">Privacy controls coming soon.</string>
 
-    <!-- Campus-Inator student shell (bonus UX pass) -->
-    <string name="app_display_name">Campus-Inator</string>
+    <!-- Bonus UX strings (student shell) -->
+    <string name="student_home_header_title">Campus Events</string>
     <string name="my_payments_subtitle">Track your registration status</string>
     <string name="my_payments_coming_soon">My Payments — coming soon.</string>
     <string name="search_events_title">Search Events</string>

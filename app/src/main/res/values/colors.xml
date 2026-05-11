@@ -1,5 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Option B: Slate canvas + single indigo accent (#4F46E5 only) -->
+    <color name="campus_canvas">#F8FAFC</color>
+    <color name="campus_surface">#FFFFFF</color>
+    <color name="campus_header_slate">#0F172A</color>
+    <color name="campus_header_on">#F8FAFC</color>
+    <color name="campus_header_on_muted">#94A3B8</color>
+    <color name="campus_accent">#4F46E5</color>
+    <color name="campus_accent_container">#EEF2FF</color>
+    <color name="campus_on_accent_container">#312E81</color>
+
+    <color name="campus_on_surface">#0F172A</color>
+    <color name="campus_on_surface_emphasis">#0F172A</color>
+    <color name="campus_on_surface_secondary">#64748B</color>
+    <color name="campus_on_surface_tertiary">#94A3B8</color>
+    <color name="campus_on_surface_body">#64748B</color>
+    <color name="campus_section_label">#475569</color>
+    <color name="campus_link">#4F46E5</color>
+    <color name="campus_empty_state_muted">#94A3B8</color>
+    <color name="campus_caption_muted">#64748B</color>
+
+    <color name="campus_card_stroke">#E2E8F0</color>
+    <color name="campus_divider">#E2E8F0</color>
+    <color name="campus_divider_strong">#CBD5E1</color>
+
+    <!-- Bottom nav -->
+    <color name="campus_nav_inactive">#94A3B8</color>
+    <!-- ~12% indigo pill behind active item (Material3 active indicator) -->
+    <color name="campus_nav_active_indicator">#1F4F46E5</color>
+
+    <!-- Semantic badges (unchanged logic; tuned to sit on white cards) -->
+    <color name="campus_badge_error_text">#C62828</color>
+    <color name="campus_badge_error_bg">#FFEBEE</color>
+    <color name="campus_badge_warning_text">#E65100</color>
+    <color name="campus_badge_warning_bg">#FFF3E0</color>
+    <color name="campus_badge_caution_text">#EF6C00</color>
+    <color name="campus_badge_caution_bg">#FFF8E1</color>
+    <color name="campus_badge_success_text">#2E7D32</color>
+    <color name="campus_badge_success_bg">#E8F5E9</color>
+    <color name="campus_error">#DC2626</color>
+
+    <!-- Aliases used by existing layouts (map to Option B — do not mix second accent) -->
+    <color name="campus_background">@color/campus_canvas</color>
+    <color name="campus_explore_canvas">@color/campus_canvas</color>
+    <color name="campus_surface_variant">@color/campus_canvas</color>
+    <color name="campus_teal_700">@color/campus_header_slate</color>
+    <color name="campus_teal_800">@color/campus_header_slate</color>
+    <color name="campus_teal_900">@color/campus_header_slate</color>
+    <color name="campus_teal_muted_on_teal">@color/campus_header_on_muted</color>
+    <color name="campus_teal_container_light">@color/campus_accent_container</color>
+    <color name="campus_on_primary">#FFFFFF</color>
+    <color name="campus_accent_blue">@color/campus_accent</color>
+    <color name="campus_accent_purple">@color/campus_accent</color>
+
+    <color name="campus_primary_light">@color/campus_accent</color>
+    <color name="campus_on_primary_light">#FFFFFF</color>
+    <color name="campus_primary_container_light">@color/campus_accent_container</color>
+    <color name="campus_on_primary_container_light">@color/campus_on_accent_container</color>
 </resources>

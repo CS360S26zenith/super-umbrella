@@ -50,7 +50,7 @@ This application serves as a centralized platform for university campus events, 
 
 Tracked for grading when features land **outside** the originally completed baseline user stories (see `USER_STORY_BACKLOG_PART4.md`, section **Category B**).
 
-- **B-01:** Campus-Inator-style student Home (notification bar, stats, My Payments placeholder, upcoming feed).
+- **B-01:** Student Home shell (notification bar, stats, My Payments placeholder, upcoming feed).
 - **B-02:** Explore screen refresh — search, category chips, date/price/sort filters, richer list rows.
 - **B-03:** Optional `ticketPricePkr` on events for PKR-based price filtering when data provides it.
 - **B-04:** RSVP **attendance history** screen (`StudentEventHistoryActivity`).

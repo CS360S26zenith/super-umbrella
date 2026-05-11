@@ -346,7 +346,7 @@ Use this section for work added **after** the originally completed user stories,
 
 | ID | Enhancement | Notes |
 |----|-------------|--------|
-| B-01 | **Campus-Inator student landing (Home)** | Teal-style hero, top notification bell, stats (This week / Registered / Saved), **My Payments** entry (UI placeholder), quick tiles, upcoming-only feed with dedicated row layout. |
+| B-01 | **Student landing (Home)** | Teal-style hero, top notification bell, stats (This week / Registered / Saved), **My Payments** entry (UI placeholder), quick tiles, upcoming-only feed with dedicated row layout. |
 | B-02 | **Explore redesign** | Search Events header, category chips (All / Academic / Sports / Cultural mapped to existing categories), date range + PKR price presets + sort dialogs, result count, availability badges on cards. |
 | B-03 | **Optional `ticketPricePkr` on events** | Supports realistic price filtering when populated; falls back when absent. |
 | B-04 | **Attendance history screen** | `StudentEventHistoryActivity` — detailed RSVP history with tap-through to event detail. |

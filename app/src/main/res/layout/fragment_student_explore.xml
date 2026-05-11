@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F7FA">
+    android:background="@color/campus_explore_canvas">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0D47A1"
+        android:background="@color/campus_header_slate"
         android:padding="16dp"
         android:text="@string/search_events_title"
-        android:textColor="@android:color/white"
+        android:textColor="@color/campus_header_on"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -49,7 +49,7 @@
                         android:layout_height="22dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_student_search"
-                        app:tint="#1565C0" />
+                        app:tint="@color/campus_accent" />
 
                     <EditText
                         android:id="@+id/explore_search_bar"
@@ -60,8 +60,8 @@
                         android:inputType="text"
                         android:minHeight="52dp"
                         android:padding="12dp"
-                        android:textColor="#212121"
-                        android:textColorHint="#9E9E9E"
+                        android:textColor="@color/campus_on_surface"
+                        android:textColorHint="@color/campus_on_surface_tertiary"
                         android:textSize="15sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -139,7 +139,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/filter_date_range"
-                            android:textColor="#212121"
+                            android:textColor="@color/campus_on_surface"
                             android:textSize="15sp" />
 
                         <TextView
@@ -147,21 +147,21 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/filter_any_date"
-                            android:textColor="#546E7A"
+                            android:textColor="@color/campus_caption_muted"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=" ›"
-                            android:textColor="#9E9E9E"
+                            android:textColor="@color/campus_on_surface_tertiary"
                             android:textSize="18sp" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#EEEEEE" />
+                        android:background="@color/campus_divider" />
 
                     <LinearLayout
                         android:id="@+id/filter_price_row"
@@ -177,7 +177,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/filter_price_range"
-                            android:textColor="#212121"
+                            android:textColor="@color/campus_on_surface"
                             android:textSize="15sp" />
 
                         <TextView
@@ -185,21 +185,21 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/filter_price_any"
-                            android:textColor="#546E7A"
+                            android:textColor="@color/campus_caption_muted"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=" ›"
-                            android:textColor="#9E9E9E"
+                            android:textColor="@color/campus_on_surface_tertiary"
                             android:textSize="18sp" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#EEEEEE" />
+                        android:background="@color/campus_divider" />
 
                     <LinearLayout
                         android:id="@+id/filter_sort_row"
@@ -215,7 +215,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/filter_sort"
-                            android:textColor="#212121"
+                            android:textColor="@color/campus_on_surface"
                             android:textSize="15sp" />
 
                         <TextView
@@ -223,14 +223,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/sort_latest_date_desc"
-                            android:textColor="#546E7A"
+                            android:textColor="@color/campus_caption_muted"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=" ›"
-                            android:textColor="#9E9E9E"
+                            android:textColor="@color/campus_on_surface_tertiary"
                             android:textSize="18sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -249,14 +249,14 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/campus_societies_button"
-                    android:textColor="#1565C0"
+                    android:textColor="@color/campus_accent"
                     android:textSize="13sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" · "
-                    android:textColor="#BDBDBD" />
+                    android:textColor="@color/campus_on_surface_tertiary" />
 
                 <TextView
                     android:id="@+id/link_calendar"
@@ -264,14 +264,14 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/quick_calendar"
-                    android:textColor="#1565C0"
+                    android:textColor="@color/campus_accent"
                     android:textSize="13sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" · "
-                    android:textColor="#BDBDBD" />
+                    android:textColor="@color/campus_on_surface_tertiary" />
 
                 <TextView
                     android:id="@+id/link_notifications"
@@ -279,14 +279,14 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/notifications"
-                    android:textColor="#1565C0"
+                    android:textColor="@color/campus_accent"
                     android:textSize="13sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" · "
-                    android:textColor="#BDBDBD" />
+                    android:textColor="@color/campus_on_surface_tertiary" />
 
                 <TextView
                     android:id="@+id/link_help"
@@ -294,7 +294,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/help_assistant_short"
-                    android:textColor="#1565C0"
+                    android:textColor="@color/campus_accent"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -304,7 +304,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColor="#546E7A"
+                android:textColor="@color/campus_caption_muted"
                 android:textSize="14sp"
                 tools:text="24 events found" />
 
@@ -315,7 +315,7 @@
                 android:paddingTop="4dp"
                 android:paddingEnd="16dp"
                 android:text="@string/results_heading"
-                android:textColor="#263238"
+                android:textColor="@color/campus_on_surface_emphasis"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -334,7 +334,7 @@
                 android:gravity="center"
                 android:padding="24dp"
                 android:text="@string/explore_no_matches"
-                android:textColor="#78909C"
+                android:textColor="@color/campus_empty_state_muted"
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView

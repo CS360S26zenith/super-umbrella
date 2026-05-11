@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="campus_spacing_grid">8dp</dimen>
+    <dimen name="campus_radius_card_medium">12dp</dimen>
+    <dimen name="campus_radius_card_large">14dp</dimen>
+</resources>

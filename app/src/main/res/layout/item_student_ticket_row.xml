@@ -5,8 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="3dp">
+    app:cardCornerRadius="@dimen/campus_radius_card_medium"
+    app:cardElevation="1dp"
+    app:strokeColor="@color/campus_card_stroke"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +20,7 @@
             android:id="@+id/ticket_row_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#212121"
+            android:textColor="@color/campus_on_surface"
             android:textSize="16sp"
             android:textStyle="bold"
             tools:text="Sports Fest" />
@@ -28,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="#616161"
+            android:textColor="@color/campus_on_surface_body"
             android:textSize="13sp"
             tools:text="May 13, 2026 · Quad" />
 
