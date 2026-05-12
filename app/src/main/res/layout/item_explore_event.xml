@@ -91,15 +91,17 @@
 
                 <TextView
                     android:id="@+id/explore_event_society"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_weight="1"
                     android:ellipsize="end"
+                    android:maxWidth="200dp"
                     android:maxLines="1"
-                    android:textColor="@color/campus_on_surface_secondary"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp"
                     android:textSize="11sp"
-                    tools:text="By LUMS Debating Society" />
+                    android:textStyle="bold"
+                    tools:text="Design Innovation Society" />
             </LinearLayout>
         </LinearLayout>
 

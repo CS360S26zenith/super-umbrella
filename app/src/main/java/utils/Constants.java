@@ -56,6 +56,10 @@ public class Constants {
     public static final String EXTRA_EVENT_TITLE = "eventTitle";
     public static final String EXTRA_SOCIETY_ID = "societyId";
     public static final String EXTRA_SOCIETY_NAME = "societyName";
+    /** When true, {@link MyCalendarActivity} shows only upcoming RSVPs in the current calendar month. */
+    public static final String EXTRA_CALENDAR_THIS_MONTH_UPCOMING = "calendarThisMonthUpcoming";
+    /** When true, {@link StudentFollowedSocietiesActivity} lists only societies the user already follows. */
+    public static final String EXTRA_SOCIETIES_FOLLOWED_ONLY = "societiesFollowedOnly";
 
     private Constants() {
         // Prevent instantiation

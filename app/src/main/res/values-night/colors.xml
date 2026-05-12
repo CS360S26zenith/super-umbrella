@@ -35,6 +35,8 @@
     <color name="campus_badge_caution_bg">#422006</color>
     <color name="campus_badge_success_text">#86EFAC</color>
     <color name="campus_badge_success_bg">#14532D</color>
+    <color name="campus_badge_society_text">#DDD6FE</color>
+    <color name="campus_badge_society_bg">#4C1D95</color>
     <color name="campus_error">#F87171</color>
 
     <color name="campus_background">@color/campus_canvas</color>

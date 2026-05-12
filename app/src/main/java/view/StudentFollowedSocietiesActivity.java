@@ -23,6 +23,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +40,7 @@ public class StudentFollowedSocietiesActivity extends AppCompatActivity implemen
     private FirestoreService firestoreService;
     private String userId;
     private Set<String> followedIds = new HashSet<>();
+    private boolean followedOnly;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +49,13 @@ public class StudentFollowedSocietiesActivity extends AppCompatActivity implemen
 
         firestoreService = new FirestoreService();
 
+        followedOnly = getIntent().getBooleanExtra(Constants.EXTRA_SOCIETIES_FOLLOWED_ONLY, false);
+
         MaterialToolbar toolbar = findViewById(R.id.societies_toolbar);
         toolbar.setTitle(R.string.followed_societies_title);
-        toolbar.setSubtitle(R.string.followed_societies_subtitle);
+        toolbar.setSubtitle(followedOnly
+                ? R.string.followed_societies_followed_only_subtitle
+                : R.string.followed_societies_subtitle);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -114,7 +120,18 @@ public class StudentFollowedSocietiesActivity extends AppCompatActivity implemen
             @Override
             public void onSuccess(List<Society> societies) {
                 loadingBar.setVisibility(View.GONE);
-                adapter.setSocieties(societies);
+                List<Society> toShow = societies;
+                if (followedOnly) {
+                    toShow = new ArrayList<>();
+                    if (societies != null) {
+                        for (Society s : societies) {
+                            if (s.getId() != null && followedIds.contains(s.getId())) {
+                                toShow.add(s);
+                            }
+                        }
+                    }
+                }
+                adapter.setSocieties(toShow);
                 adapter.filter(searchInput.getText().toString());
             }
 

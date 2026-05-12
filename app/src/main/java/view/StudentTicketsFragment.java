@@ -57,6 +57,9 @@ public class StudentTicketsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
 
+        view.findViewById(R.id.tickets_open_attendance_history).setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), StudentEventHistoryActivity.class)));
+
         loadTickets();
     }
 

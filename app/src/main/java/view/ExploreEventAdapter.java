@@ -84,7 +84,9 @@ public class ExploreEventAdapter extends RecyclerView.Adapter<ExploreEventAdapte
         String society = e.getSocietyName();
         if (society != null && !society.trim().isEmpty()) {
             holder.society.setVisibility(View.VISIBLE);
-            holder.society.setText(context.getString(R.string.explore_event_host_by, society.trim()));
+            holder.society.setText(society.trim());
+            holder.society.setTextColor(ContextCompat.getColor(context, R.color.campus_badge_society_text));
+            holder.society.setBackgroundResource(R.drawable.bg_explore_society_bookmark);
         } else {
             holder.society.setVisibility(View.GONE);
         }

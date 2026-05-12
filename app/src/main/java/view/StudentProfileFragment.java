@@ -72,8 +72,26 @@ public class StudentProfileFragment extends Fragment {
         view.findViewById(R.id.row_attendance_history).setOnClickListener(v ->
                 startActivity(new Intent(requireContext(), StudentEventHistoryActivity.class)));
 
-        view.findViewById(R.id.row_my_societies).setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), StudentFollowedSocietiesActivity.class)));
+        view.findViewById(R.id.row_my_societies).setOnClickListener(v -> {
+            Intent i = new Intent(requireContext(), StudentFollowedSocietiesActivity.class);
+            i.putExtra(Constants.EXTRA_SOCIETIES_FOLLOWED_ONLY, false);
+            startActivity(i);
+        });
+
+        view.findViewById(R.id.profile_stat_attended_column).setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), StudentEventHistoryActivity.class)));
+
+        view.findViewById(R.id.profile_stat_month_column).setOnClickListener(v -> {
+            Intent i = new Intent(requireContext(), MyCalendarActivity.class);
+            i.putExtra(Constants.EXTRA_CALENDAR_THIS_MONTH_UPCOMING, true);
+            startActivity(i);
+        });
+
+        view.findViewById(R.id.profile_stat_following_column).setOnClickListener(v -> {
+            Intent i = new Intent(requireContext(), StudentFollowedSocietiesActivity.class);
+            i.putExtra(Constants.EXTRA_SOCIETIES_FOLLOWED_ONLY, true);
+            startActivity(i);
+        });
 
         view.findViewById(R.id.row_qr_checkin).setOnClickListener(v -> {
             if (getActivity() instanceof StudentMainActivity) {
@@ -152,21 +170,41 @@ public class StudentProfileFragment extends Fragment {
         if (!loadedUser || !loadedRsvp) {
             return;
         }
-        statAttendedView.setText(String.valueOf(rsvpCache.size()));
-        statMonthView.setText(String.valueOf(countThisCalendarMonth(rsvpCache)));
+        statAttendedView.setText(String.valueOf(countPastAttendedFromRsvps(rsvpCache)));
+        statMonthView.setText(String.valueOf(countUpcomingThisCalendarMonth(rsvpCache)));
     }
 
-    private static int countThisCalendarMonth(List<Event> events) {
-        Calendar cal = Calendar.getInstance();
-        int month = cal.get(Calendar.MONTH);
-        int year = cal.get(Calendar.YEAR);
+    private static int countPastAttendedFromRsvps(List<Event> events) {
+        long now = System.currentTimeMillis();
         int n = 0;
         for (Event e : events) {
             Timestamp ts = e.getDate();
             if (ts == null) {
                 continue;
             }
-            cal.setTime(ts.toDate());
+            if (ts.toDate().getTime() < now) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    private static int countUpcomingThisCalendarMonth(List<Event> events) {
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        long now = System.currentTimeMillis();
+        int n = 0;
+        for (Event e : events) {
+            Timestamp ts = e.getDate();
+            if (ts == null) {
+                continue;
+            }
+            long t = ts.toDate().getTime();
+            if (t < now) {
+                continue;
+            }
+            cal.setTimeInMillis(t);
             if (cal.get(Calendar.MONTH) == month && cal.get(Calendar.YEAR) == year) {
                 n++;
             }
