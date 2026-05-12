@@ -66,7 +66,7 @@ public class StudentTicketsFragment extends Fragment {
         }
         loadingBar.setVisibility(View.VISIBLE);
         emptyView.setVisibility(View.GONE);
-        firestoreService.getRsvpedEventsByStudent(
+        firestoreService.getRsvpedUpcomingEventsForTickets(
                 FirebaseAuth.getInstance().getCurrentUser().getUid(),
                 new FirestoreService.EventListCallback() {
                     @Override

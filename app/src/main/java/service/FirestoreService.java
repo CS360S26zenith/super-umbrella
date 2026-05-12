@@ -588,6 +588,57 @@ public class FirestoreService {
     }
 
     /**
+     * Confirmed RSVPs for the Tickets tab: only events still in the future (or no date),
+     * ordered by most recent RSVP first (uses each RSVP document's {@code timestamp} field).
+     */
+    public void getRsvpedUpcomingEventsForTickets(String studentId, final EventListCallback callback) {
+        db.collection(Constants.COLLECTION_RSVPS)
+                .whereEqualTo("studentId", studentId)
+                .whereEqualTo("status", Constants.STATUS_CONFIRMED)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.isEmpty()) {
+                        callback.onSuccess(new ArrayList<>());
+                        return;
+                    }
+                    Map<String, Long> rsvpMillisByEvent = new HashMap<>();
+                    for (QueryDocumentSnapshot doc : snapshot) {
+                        String eventId = doc.getString("eventId");
+                        if (eventId == null) {
+                            continue;
+                        }
+                        com.google.firebase.Timestamp ts = doc.getTimestamp("timestamp");
+                        long ms = ts != null ? ts.toDate().getTime() : 0L;
+                        rsvpMillisByEvent.merge(eventId, ms, Math::max);
+                    }
+                    List<String> eventIds = new ArrayList<>(rsvpMillisByEvent.keySet());
+                    fetchEventsByDocumentIdsChunked(eventIds, 0, new ArrayList<>(),
+                            new EventListCallback() {
+                                @Override
+                                public void onSuccess(List<Event> events) {
+                                    long now = System.currentTimeMillis();
+                                    List<Event> upcoming = new ArrayList<>();
+                                    for (Event e : events) {
+                                        if (e.getDate() == null
+                                                || e.getDate().toDate().getTime() >= now) {
+                                            upcoming.add(e);
+                                        }
+                                    }
+                                    Collections.sort(upcoming, Comparator.comparingLong((Event e) ->
+                                            -rsvpMillisByEvent.getOrDefault(e.getEventId(), 0L)));
+                                    callback.onSuccess(upcoming);
+                                }
+
+                                @Override
+                                public void onFailure(String error) {
+                                    callback.onFailure(error);
+                                }
+                            });
+                })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /**
      * Loads events by document ID in chunks to satisfy Firestore {@code whereIn} limits.
      */
     private void fetchEventsByDocumentIdsChunked(List<String> eventIds, int offset,

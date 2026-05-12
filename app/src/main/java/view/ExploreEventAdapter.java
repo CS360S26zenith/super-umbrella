@@ -81,6 +81,14 @@ public class ExploreEventAdapter extends RecyclerView.Adapter<ExploreEventAdapte
             holder.badge.setBackgroundColor(ContextCompat.getColor(context, R.color.campus_badge_success_bg));
         }
 
+        String society = e.getSocietyName();
+        if (society != null && !society.trim().isEmpty()) {
+            holder.society.setVisibility(View.VISIBLE);
+            holder.society.setText(context.getString(R.string.explore_event_host_by, society.trim()));
+        } else {
+            holder.society.setVisibility(View.GONE);
+        }
+
         holder.itemView.setOnClickListener(v -> {
             Intent i = new Intent(context, EventDetailActivity.class);
             i.putExtra(Constants.EXTRA_EVENT_ID, e.getEventId());
@@ -99,6 +107,7 @@ public class ExploreEventAdapter extends RecyclerView.Adapter<ExploreEventAdapte
         final TextView title;
         final TextView venue;
         final TextView badge;
+        final TextView society;
 
         Holder(@NonNull View itemView) {
             super(itemView);
@@ -107,6 +116,7 @@ public class ExploreEventAdapter extends RecyclerView.Adapter<ExploreEventAdapte
             title = itemView.findViewById(R.id.explore_event_title);
             venue = itemView.findViewById(R.id.explore_event_venue);
             badge = itemView.findViewById(R.id.explore_event_badge);
+            society = itemView.findViewById(R.id.explore_event_society);
         }
     }
 }

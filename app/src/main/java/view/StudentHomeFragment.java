@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,20 +99,13 @@ public class StudentHomeFragment extends Fragment {
         view.findViewById(R.id.card_my_payments).setOnClickListener(v ->
                 Toast.makeText(requireContext(), R.string.my_payments_coming_soon, Toast.LENGTH_SHORT).show());
 
-        view.findViewById(R.id.quick_search_card).setOnClickListener(v -> openExploreTab());
         view.findViewById(R.id.quick_trending_card).setOnClickListener(v -> applyTrendingToHome());
-        view.findViewById(R.id.quick_profile_card).setOnClickListener(v -> openProfileTab());
+        view.findViewById(R.id.quick_my_rsvps_card).setOnClickListener(v -> openTicketsTab());
         view.findViewById(R.id.btn_explore_all).setOnClickListener(v -> openExploreTab());
 
         setGreetingFromTime();
         loadFollowedCountAndRsvps();
         loadLiveEventsForHome();
-    }
-
-    private void openProfileTab() {
-        if (getActivity() instanceof StudentMainActivity) {
-            ((StudentMainActivity) requireActivity()).selectNav(R.id.nav_student_profile);
-        }
     }
 
     private void setGreetingFromTime() {
@@ -214,9 +206,9 @@ public class StudentHomeFragment extends Fragment {
             public void onSuccess(List<Event> events) {
                 loadingBar.setVisibility(View.GONE);
                 allLiveEvents = events != null ? events : new ArrayList<>();
-                List<Event> upcoming = filterUpcomingSorted(allLiveEvents);
-                adapter.setEvents(upcoming);
-                emptyHomeView.setVisibility(upcoming.isEmpty() ? View.VISIBLE : View.GONE);
+                List<HomeUpcomingAdapter.FeedRow> feed = buildHomeFeed(allLiveEvents);
+                adapter.setFeedRows(feed);
+                emptyHomeView.setVisibility(feed.isEmpty() ? View.VISIBLE : View.GONE);
             }
 
             @Override
@@ -227,36 +219,94 @@ public class StudentHomeFragment extends Fragment {
         });
     }
 
-    private List<Event> filterUpcomingSorted(List<Event> events) {
-        Date startOfToday = startOfDay(new Date());
+    private List<HomeUpcomingAdapter.FeedRow> buildHomeFeed(List<Event> live) {
+        long now = System.currentTimeMillis();
         List<Event> upcoming = new ArrayList<>();
-        for (Event e : events) {
-            Timestamp ts = e.getDate();
-            if (ts == null) {
+        List<Event> past = new ArrayList<>();
+        for (Event e : live) {
+            if (e.getDate() == null) {
                 continue;
             }
-            Date d = ts.toDate();
-            if (!d.before(startOfToday)) {
+            long t = e.getDate().toDate().getTime();
+            if (t < now) {
+                past.add(e);
+            } else {
                 upcoming.add(e);
             }
         }
-        Collections.sort(upcoming, Comparator.comparing(o ->
-                o.getDate() != null ? o.getDate().toDate().getTime() : Long.MAX_VALUE));
+        Comparator<Event> byDateDesc = (a, b) -> Long.compare(
+                b.getDate().toDate().getTime(), a.getDate().toDate().getTime());
+        Collections.sort(upcoming, byDateDesc);
+        Collections.sort(past, byDateDesc);
+
+        List<HomeUpcomingAdapter.FeedRow> rows = new ArrayList<>();
+        if (!upcoming.isEmpty()) {
+            rows.add(HomeUpcomingAdapter.FeedRow.header(getString(R.string.home_section_upcoming)));
+            for (Event e : upcoming) {
+                rows.add(HomeUpcomingAdapter.FeedRow.event(e, false));
+            }
+        }
+        if (!past.isEmpty()) {
+            rows.add(HomeUpcomingAdapter.FeedRow.header(getString(R.string.home_section_past)));
+            for (Event e : past) {
+                rows.add(HomeUpcomingAdapter.FeedRow.event(e, true));
+            }
+        }
+        return rows;
+    }
+
+    private List<Event> upcomingEventsSortedForTrending(List<Event> events) {
+        long now = System.currentTimeMillis();
+        List<Event> upcoming = new ArrayList<>();
+        for (Event e : events) {
+            if (e.getDate() == null) {
+                continue;
+            }
+            if (e.getDate().toDate().getTime() >= now) {
+                upcoming.add(e);
+            }
+        }
+        Collections.sort(upcoming, (a, b) -> Long.compare(
+                b.getDate().toDate().getTime(), a.getDate().toDate().getTime()));
         return upcoming;
     }
 
-    private static Date startOfDay(Date ref) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(ref);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
+    private List<Event> pastEventsSortedDesc(List<Event> events) {
+        long now = System.currentTimeMillis();
+        List<Event> past = new ArrayList<>();
+        for (Event e : events) {
+            if (e.getDate() == null) {
+                continue;
+            }
+            if (e.getDate().toDate().getTime() < now) {
+                past.add(e);
+            }
+        }
+        Collections.sort(past, (a, b) -> Long.compare(
+                b.getDate().toDate().getTime(), a.getDate().toDate().getTime()));
+        return past;
+    }
+
+    private List<HomeUpcomingAdapter.FeedRow> buildHomeFeedFromUpcomingAndPast(
+            List<Event> upcomingRanked, List<Event> pastSorted) {
+        List<HomeUpcomingAdapter.FeedRow> rows = new ArrayList<>();
+        if (!upcomingRanked.isEmpty()) {
+            rows.add(HomeUpcomingAdapter.FeedRow.header(getString(R.string.home_section_upcoming)));
+            for (Event e : upcomingRanked) {
+                rows.add(HomeUpcomingAdapter.FeedRow.event(e, false));
+            }
+        }
+        if (!pastSorted.isEmpty()) {
+            rows.add(HomeUpcomingAdapter.FeedRow.header(getString(R.string.home_section_past)));
+            for (Event e : pastSorted) {
+                rows.add(HomeUpcomingAdapter.FeedRow.event(e, true));
+            }
+        }
+        return rows;
     }
 
     private void applyTrendingToHome() {
-        List<Event> pool = filterUpcomingSorted(allLiveEvents);
+        List<Event> pool = upcomingEventsSortedForTrending(allLiveEvents);
         if (pool.isEmpty()) {
             Toast.makeText(requireContext(), R.string.home_no_events_trending, Toast.LENGTH_SHORT).show();
             return;
@@ -282,8 +332,10 @@ public class StudentHomeFragment extends Fragment {
 
     private void rankAndShow(List<Event> pool, List<String> preferredCategories) {
         List<Event> ranked = recommendationService.rankEvents(pool, preferredCategories);
-        adapter.setEvents(ranked);
-        emptyHomeView.setVisibility(ranked.isEmpty() ? View.VISIBLE : View.GONE);
+        List<Event> pastSorted = pastEventsSortedDesc(allLiveEvents);
+        List<HomeUpcomingAdapter.FeedRow> feed = buildHomeFeedFromUpcomingAndPast(ranked, pastSorted);
+        adapter.setFeedRows(feed);
+        emptyHomeView.setVisibility(feed.isEmpty() ? View.VISIBLE : View.GONE);
         Toast.makeText(requireContext(),
                 getString(R.string.home_trending_applied, ranked.size()),
                 Toast.LENGTH_SHORT).show();
@@ -305,6 +357,12 @@ public class StudentHomeFragment extends Fragment {
     private void openExploreTab() {
         if (getActivity() instanceof StudentMainActivity) {
             ((StudentMainActivity) requireActivity()).selectNav(R.id.nav_student_explore);
+        }
+    }
+
+    private void openTicketsTab() {
+        if (getActivity() instanceof StudentMainActivity) {
+            ((StudentMainActivity) requireActivity()).selectNav(R.id.nav_student_tickets);
         }
     }
 
