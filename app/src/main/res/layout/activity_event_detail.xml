@@ -85,6 +85,23 @@
                 android:textColor="#555555" />
         </LinearLayout>
 
+        <!-- Organizing society (from organizer’s society selection at create time) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_organized_by_label"
+            android:textSize="13sp"
+            android:textColor="#757575"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/detail_organizing_society"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            android:layout_marginBottom="16dp" />
+
         <!-- Divider -->
         <View
             android:layout_width="match_parent"

@@ -139,17 +139,10 @@ public class EditEventActivity extends AppCompatActivity {
      * Sets up the category spinner with available event categories.
      */
     private void setupCategorySpinner() {
-        String[] categories = {
-                Constants.CATEGORY_TALKS,
-                Constants.CATEGORY_SPORTS,
-                Constants.CATEGORY_CLUBS,
-                Constants.CATEGORY_PERFORMANCES
-        };
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_item,
-                categories
+                Constants.CATEGORIES
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
@@ -289,18 +282,14 @@ public class EditEventActivity extends AppCompatActivity {
             datePickerButton.setText(dateFormat.format(event.getDate().toDate()));
         }
 
-        // Set category spinner selection
-        String[] categories = {
-                Constants.CATEGORY_TALKS,
-                Constants.CATEGORY_SPORTS,
-                Constants.CATEGORY_CLUBS,
-                Constants.CATEGORY_PERFORMANCES
-        };
-
-        for (int i = 0; i < categories.length; i++) {
-            if (categories[i].equals(event.getCategory())) {
-                categorySpinner.setSelection(i);
-                break;
+        // Set category spinner selection (supports legacy category strings not in CATEGORIES)
+        String cat = event.getCategory();
+        if (cat != null) {
+            for (int i = 0; i < Constants.CATEGORIES.length; i++) {
+                if (Constants.CATEGORIES[i].equalsIgnoreCase(cat)) {
+                    categorySpinner.setSelection(i);
+                    break;
+                }
             }
         }
 

@@ -120,17 +120,10 @@ public class CreateEventActivity extends AppCompatActivity {
      * Sets up the category spinner with available event categories.
      */
     private void setupCategorySpinner() {
-        String[] categories = {
-                Constants.CATEGORY_TALKS,
-                Constants.CATEGORY_SPORTS,
-                Constants.CATEGORY_CLUBS,
-                Constants.CATEGORY_PERFORMANCES
-        };
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_item,
-                categories
+                Constants.CATEGORIES
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);

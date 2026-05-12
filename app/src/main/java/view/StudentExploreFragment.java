@@ -26,6 +26,7 @@ import com.example.campuseventstest.R;
 import com.example.campuseventstest.model.Event;
 import com.example.campuseventstest.service.FirestoreService;
 import com.example.campuseventstest.utils.Constants;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.text.SimpleDateFormat;
@@ -34,20 +35,16 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
- * Explore — search, category buckets, date/price/sort filters, rich event cards.
+ * Explore — search, category chips (organizer defaults plus any category present in loaded events),
+ * date/price/sort filters.
  */
 public class StudentExploreFragment extends Fragment {
-
-    private enum Bucket {
-        ALL,
-        ACADEMIC,
-        SPORTS,
-        CULTURAL
-    }
 
     private enum SortMode {
         DATE_ASC,
@@ -72,7 +69,8 @@ public class StudentExploreFragment extends Fragment {
     private FirestoreService firestoreService;
     private List<Event> allLiveEvents = new ArrayList<>();
 
-    private Bucket bucket = Bucket.ALL;
+    /** {@code null} means “All”; otherwise match {@link Event#getCategory()} (case-insensitive). */
+    private String selectedCategoryFilter;
     private String searchQuery = "";
     private Calendar filterStartDay;
     private Calendar filterEndDay;
@@ -118,22 +116,7 @@ public class StudentExploreFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
 
-        categoryChips.setOnCheckedStateChangeListener((group, ids) -> {
-            if (ids.isEmpty()) {
-                return;
-            }
-            int id = ids.get(0);
-            if (id == R.id.chip_explore_all) {
-                bucket = Bucket.ALL;
-            } else if (id == R.id.chip_explore_academic) {
-                bucket = Bucket.ACADEMIC;
-            } else if (id == R.id.chip_explore_sports) {
-                bucket = Bucket.SPORTS;
-            } else if (id == R.id.chip_explore_cultural) {
-                bucket = Bucket.CULTURAL;
-            }
-            applyFiltersAndRender();
-        });
+        rebuildCategoryChips(new ArrayList<>());
 
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -172,6 +155,112 @@ public class StudentExploreFragment extends Fragment {
         loadEvents();
     }
 
+    /**
+     * Rebuilds chips: All, {@link Constants#CATEGORIES}, then any other non-empty category strings
+     * seen in {@code events} so legacy or custom categories still appear and can be filtered.
+     */
+    private void rebuildCategoryChips(List<Event> events) {
+        String previousSelection = selectedCategoryFilter;
+        categoryChips.setOnCheckedStateChangeListener(null);
+        categoryChips.removeAllViews();
+
+        Chip allChip = (Chip) LayoutInflater.from(requireContext())
+                .inflate(R.layout.chip_explore_category, categoryChips, false);
+        allChip.setText(R.string.cat_all);
+        allChip.setTag("");
+        categoryChips.addView(allChip);
+
+        for (String cat : Constants.CATEGORIES) {
+            Chip chip = (Chip) LayoutInflater.from(requireContext())
+                    .inflate(R.layout.chip_explore_category, categoryChips, false);
+            chip.setText(cat);
+            chip.setTag(cat);
+            categoryChips.addView(chip);
+        }
+
+        Set<String> coveredLower = new HashSet<>();
+        for (String c : Constants.CATEGORIES) {
+            coveredLower.add(c.toLowerCase(Locale.US));
+        }
+
+        List<String> extras = new ArrayList<>();
+        if (events != null) {
+            for (Event e : events) {
+                String c = e.getCategory();
+                if (c == null) {
+                    continue;
+                }
+                c = c.trim();
+                if (c.isEmpty()) {
+                    continue;
+                }
+                String low = c.toLowerCase(Locale.US);
+                if (coveredLower.contains(low)) {
+                    continue;
+                }
+                coveredLower.add(low);
+                extras.add(c);
+            }
+        }
+        Collections.sort(extras, String.CASE_INSENSITIVE_ORDER);
+        for (String cat : extras) {
+            Chip chip = (Chip) LayoutInflater.from(requireContext())
+                    .inflate(R.layout.chip_explore_category, categoryChips, false);
+            chip.setText(cat);
+            chip.setTag(cat);
+            categoryChips.addView(chip);
+        }
+
+        boolean restored = false;
+        for (int i = 0; i < categoryChips.getChildCount(); i++) {
+            View child = categoryChips.getChildAt(i);
+            if (!(child instanceof Chip)) {
+                continue;
+            }
+            Chip ch = (Chip) child;
+            Object tagObj = ch.getTag();
+            if (!(tagObj instanceof String)) {
+                continue;
+            }
+            String tag = (String) tagObj;
+            if (previousSelection == null) {
+                if (tag.isEmpty()) {
+                    ch.setChecked(true);
+                    restored = true;
+                    selectedCategoryFilter = null;
+                    break;
+                }
+            } else if (previousSelection.equalsIgnoreCase(tag)) {
+                ch.setChecked(true);
+                selectedCategoryFilter = tag.isEmpty() ? null : tag;
+                restored = true;
+                break;
+            }
+        }
+        if (!restored) {
+            selectedCategoryFilter = null;
+            allChip.setChecked(true);
+        }
+
+        categoryChips.setOnCheckedStateChangeListener((group, ids) -> {
+            if (ids.isEmpty()) {
+                return;
+            }
+            Chip checked = group.findViewById(ids.get(0));
+            if (checked == null) {
+                return;
+            }
+            Object tag = checked.getTag();
+            if (tag instanceof String) {
+                String t = (String) tag;
+                selectedCategoryFilter = t.isEmpty() ? null : t;
+            } else {
+                selectedCategoryFilter = null;
+            }
+            applyFiltersAndRender();
+        });
+    }
+
     private void loadEvents() {
         if (loadInFlight) {
             return;
@@ -187,6 +276,7 @@ public class StudentExploreFragment extends Fragment {
                 loadingBar.setVisibility(View.GONE);
                 lastLoadElapsed = SystemClock.elapsedRealtime();
                 allLiveEvents = events != null ? events : new ArrayList<>();
+                rebuildCategoryChips(allLiveEvents);
                 applyFiltersAndRender();
             }
 
@@ -199,21 +289,12 @@ public class StudentExploreFragment extends Fragment {
         });
     }
 
-    private boolean passesBucket(Event e) {
-        String cat = e.getCategory();
-        switch (bucket) {
-            case ALL:
-                return true;
-            case ACADEMIC:
-                return Constants.CATEGORY_TALKS.equalsIgnoreCase(cat);
-            case SPORTS:
-                return Constants.CATEGORY_SPORTS.equalsIgnoreCase(cat);
-            case CULTURAL:
-                return Constants.CATEGORY_CLUBS.equalsIgnoreCase(cat)
-                        || Constants.CATEGORY_PERFORMANCES.equalsIgnoreCase(cat);
-            default:
-                return true;
+    private boolean passesCategoryFilter(Event e) {
+        if (selectedCategoryFilter == null) {
+            return true;
         }
+        String cat = e.getCategory();
+        return cat != null && selectedCategoryFilter.equalsIgnoreCase(cat);
     }
 
     private boolean passesSearch(Event e) {
@@ -278,7 +359,7 @@ public class StudentExploreFragment extends Fragment {
     private void applyFiltersAndRender() {
         List<Event> out = new ArrayList<>();
         for (Event e : allLiveEvents) {
-            if (passesBucket(e) && passesSearch(e) && passesDate(e) && passesPrice(e)) {
+            if (passesCategoryFilter(e) && passesSearch(e) && passesDate(e) && passesPrice(e)) {
                 out.add(e);
             }
         }

@@ -78,37 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:singleSelection="true"
-                    app:selectionRequired="true">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_explore_all"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/cat_all" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_explore_academic"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_academic" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_explore_sports"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_sports" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_explore_cultural"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_cultural" />
-                </com.google.android.material.chip.ChipGroup>
+                    app:selectionRequired="true" />
             </HorizontalScrollView>
 
             <com.google.android.material.card.MaterialCardView

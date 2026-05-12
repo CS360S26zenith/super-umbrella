@@ -26,15 +26,28 @@ public class Constants {
     public static final String STATUS_CANCELLED = "cancelled";
     public static final String STATUS_CONFIRMED = "confirmed";
 
-    // Event categories (individual constants)
-    public static final String CATEGORY_TALKS = "Talks";
+    // Event categories — single source for organizer create/edit and student Explore filters.
+    public static final String CATEGORY_ACADEMIC = "Academic";
     public static final String CATEGORY_SPORTS = "Sports";
+    public static final String CATEGORY_CULTURE = "Culture";
+    public static final String CATEGORY_TALKS = "Talks";
     public static final String CATEGORY_CLUBS = "Clubs";
     public static final String CATEGORY_PERFORMANCES = "Performances";
+    public static final String CATEGORY_WORKSHOP = "Workshop";
+    public static final String CATEGORY_CAREER_FAIR = "Career fair";
+    public static final String CATEGORY_CAMPUS_SOCIAL = "Campus social";
 
-    // Event categories (array for convenience)
+    /** Order shown in spinners and Explore chips (includes "All" only in UI, not here). */
     public static final String[] CATEGORIES = {
-            CATEGORY_TALKS, CATEGORY_SPORTS, CATEGORY_CLUBS, CATEGORY_PERFORMANCES
+            CATEGORY_ACADEMIC,
+            CATEGORY_SPORTS,
+            CATEGORY_CULTURE,
+            CATEGORY_TALKS,
+            CATEGORY_CLUBS,
+            CATEGORY_PERFORMANCES,
+            CATEGORY_WORKSHOP,
+            CATEGORY_CAREER_FAIR,
+            CATEGORY_CAMPUS_SOCIAL
     };
 
     // Intent extras

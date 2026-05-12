@@ -8,6 +8,8 @@
     <string name="past_events">Past</string>
     <string name="no_events_for_section">No events in this section.</string>
     <string name="organizing_society">Organizing society</string>
+    <string name="detail_organized_by_label">Organized by</string>
+    <string name="detail_organized_by_unknown">Not specified</string>
     <string name="select_society_validation">Please select the organizing society.</string>
     <string name="nav_home">Home</string>
     <string name="nav_my_events">My Events</string>
@@ -103,7 +105,6 @@
     <string name="event_history_subtitle">Past and upcoming events you RSVP\'d to.</string>
     <string name="no_event_history">No RSVP history yet.</string>
     <string name="followed_societies_title">My societies</string>
-    <string name="followed_societies_subtitle">Societies you follow — open one to see upcoming and past events.</string>
-    <string name="no_followed_societies">You are not following any societies yet. Explore Campus Societies to follow clubs.</string>
+    <string name="followed_societies_subtitle">Browse all campus societies, follow the ones you care about, then open a society for its upcoming and past events.</string>
     <string name="tap_for_society_events">Tap for society events</string>
 </resources>

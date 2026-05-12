@@ -42,6 +42,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private TextView descriptionText;
     private TextView dateText;
     private TextView venueText;
+    private TextView organizingSocietyText;
     private TextView categoryText;
     private TextView capacityText;
     private ProgressBar capacityBar;
@@ -92,6 +93,7 @@ public class EventDetailActivity extends AppCompatActivity {
         descriptionText = findViewById(R.id.detail_description);
         dateText = findViewById(R.id.detail_date);
         venueText = findViewById(R.id.detail_venue);
+        organizingSocietyText = findViewById(R.id.detail_organizing_society);
         categoryText = findViewById(R.id.detail_category);
         capacityText = findViewById(R.id.detail_capacity);
         capacityBar = findViewById(R.id.detail_capacity_bar);
@@ -152,6 +154,13 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
         venueText.setText(event.getVenue());
+
+        String societyLine = event.getSocietyName();
+        if (societyLine == null || societyLine.trim().isEmpty()) {
+            societyLine = getString(R.string.detail_organized_by_unknown);
+        }
+        organizingSocietyText.setText(societyLine);
+
         categoryText.setText(event.getCategory());
 
         int fillPercentage = event.getFillPercentage();
